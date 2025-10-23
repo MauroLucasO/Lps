@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/atividadescomplementares`;
+const baseURL = `${BASE_URL}/proprietario`;
 
-function ListagemAtividadesComplementares() {
+function ListagemProprietario() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-atividades-complementares`);
+    navigate(`/cadastro-proprietario`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-atividades-complementares/${id}`);
+    navigate(`/cadastro-proprietario/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemAtividadesComplementares() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Atividade Complementar excluída com sucesso!`);
+        mensagemSucesso(`Proprietario excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemAtividadesComplementares() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir a atividade complementar`);
+        mensagemErro(`Erro ao excluir o proprietario`);
       });
   }
 
@@ -60,46 +60,33 @@ function ListagemAtividadesComplementares() {
 
   if (!dados) return null;
 
-  function formatarData(dataCalendario) {
-    const partesData = dataCalendario.substr(0, 10).split('-');
-
-    return partesData[2] + '/' + partesData[1] + '/' + partesData[0];
-  }
-
   return (
     <div className='container'>
-      <Card title='Listagem de Atividades Complementares'>
+      <Card title='Listagem de Proprietario'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
               <button
                 type='button'
-                class='btn btn-warning'
+                className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Nova Atividade Complementar
+                Novo Usuário
               </button>
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Aluno</th>
-                    <th scope='col'>Título</th>
-                    <th scope='col'>Entidade</th>
-                    <th scope='col'>Categoria</th>
-                    <th scope='col'>Carga Horária</th>
-                    <th scope='col'>Data Início</th>
+                    <th scope='col'>Login</th>
+                    <th scope='col'>CPF</th>
                     <th scope='col'>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.nomeAluno}</td>
-                      <td>{dado.titulo}</td>
-                      <td>{dado.entidadePromotora}</td>
-                      <td>{dado.nomeCategoria}</td>
-                      <td>{dado.cargaHoraria}</td>
-                      <td>{formatarData(dado.dataInicio)}</td>
+                      <td>{dado.login}</td>
+                      <td>{dado.cpf}</td>
+                      <td>{dado.admin ? 'Sim' : 'Não'}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -128,4 +115,4 @@ function ListagemAtividadesComplementares() {
   );
 }
 
-export default ListagemAtividadesComplementares;
+export default ListagemProprietario;

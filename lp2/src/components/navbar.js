@@ -8,7 +8,7 @@ function Navbar(props) {
     <div className='navbar navbar-expand-lg fixed-top navbar-dark bg-primary'>
       <div className='container'>
         <a href='/' className='navbar-brand'>
-          SCAC
+          Sistema de Lanchonete
         </a>
         <button
           className='navbar-toggler'
@@ -25,49 +25,23 @@ function Navbar(props) {
           <ul className='navbar-nav'>
             <NavbarItem
               render='true'
-              href='/listagem-usuarios'
-              label='Usuários'
-            />
-          </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/listagem-cursos' label='Cursos' />
-          </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem
-              render='true'
-              href='/listagem-professores'
-              label='Professores'
-            />
-          </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/listagem-alunos' label='Alunos' />
-          </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem
-              render='true'
-              href='/listagem-categorias'
-              label='Categorias'
+              href='/listagem-cliente'
+              label='Cliente'
             />
           </ul>
           <ul className='navbar-nav'>
             <NavbarItem
               render='true'
-              href='/listagem-atividades-complementares'
-              label='Atividades'
+              href='/listagem-gerente'
+              label='Gerente'
             />
           </ul>
           <ul className='navbar-nav'>
             <NavbarItem
               render='true'
-              href='/acompanhamento-atividades-complementares'
-              label='Acompanhamento'
+              href='/listagem-proprietario'
+              label='Proprietario'
             />
-          </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/login' label='Entrar' />
-          </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem render='true' href='/' label='Sair' />
           </ul>
         </div>
       </div>

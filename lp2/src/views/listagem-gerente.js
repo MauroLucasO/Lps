@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/alunos`;
+const baseURL = `${BASE_URL}/gerente`;
 
-function ListagemAlunos() {
+function ListagemGerente() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-alunos`);
+    navigate(`/cadastro-gerente`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-alunos/${id}`);
+    navigate(`/cadastro-gerente/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemAlunos() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Aluno excluído com sucesso!`);
+        mensagemSucesso(`Gerente excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemAlunos() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o aluno`);
+        mensagemErro(`Erro ao excluir o gerente`);
       });
   }
 
@@ -62,7 +62,7 @@ function ListagemAlunos() {
 
   return (
     <div className='container'>
-      <Card title='Listagem de Alunos'>
+      <Card title='Listagem de Gerente'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
@@ -71,25 +71,22 @@ function ListagemAlunos() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Aluno
+                Novo Usuário
               </button>
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Matrícula</th>
-                    <th scope='col'>Nome</th>
-                    <th scope='col'>Email</th>
-                    <th scope='col'>Celular</th>
+                    <th scope='col'>Login</th>
+                    <th scope='col'>CPF</th>
                     <th scope='col'>Ações</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.matricula}</td>
-                      <td>{dado.nome}</td>
-                      <td>{dado.email}</td>
-                      <td>{dado.celular}</td>
+                      <td>{dado.login}</td>
+                      <td>{dado.cpf}</td>
+                      <td>{dado.admin ? 'Sim' : 'Não'}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -118,4 +115,4 @@ function ListagemAlunos() {
   );
 }
 
-export default ListagemAlunos;
+export default ListagemGerente;
