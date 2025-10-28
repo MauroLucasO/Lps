@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/cliente`;
+const baseURL = `${BASE_URL}/estabelecimento`;
 
-function ListagemCliente() {
+function ListagemEstabelecimento() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-cliente`);
+    navigate(`/cadastro-estabelecimento`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-cliente/${id}`);
+    navigate(`/cadastro-estabelecimento/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemCliente() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Cliente excluído com sucesso!`);
+        mensagemSucesso(`Estabelecimento excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemCliente() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o cliente`);
+        mensagemErro(`Erro ao excluir o estabelecimento`);
       });
   }
 
@@ -62,7 +62,7 @@ function ListagemCliente() {
 
   return (
     <div className='container'>
-      <Card title='Listagem de Cliente'>
+      <Card title='Listagem de Estabelecimento'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
@@ -71,21 +71,18 @@ function ListagemCliente() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Cliente
+                Novo Estabelecimento
               </button>
               <table className='table table-hover'>
-                <thead>
+                 <thead>
                   <tr>
                     <th scope='col'>id</th>             
                     <th scope='col'>nome</th>
-                    <th scope='col'>cpf</th>
+                    <th scope='col'>CNPJ</th>
                     <th scope='col'>telefone</th>
-                    <th scope='col'>email</th>
-                    <th scope='col'>senha</th>
-                    <th scope='col'>cep</th>
                     <th scope='col'>cidade</th>
                     <th scope='col'>logadouro</th>
-                    <th scope='col'>admin</th>
+                    <th scope='col'>pontoDeReferencia</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,15 +90,11 @@ function ListagemCliente() {
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
                       <td>{dado.nome}</td>
-                      <td>{dado.cpf}</td>
+                      <td>{dado.CNPJ}</td>
                       <td>{dado.telefone}</td>
-                      <td>{dado.email}</td>
-                      <td>{dado.senha}</td>
-                      <td>{dado.cep}</td>
                       <td>{dado.cidade}</td>
                       <td>{dado.logadouro}</td>
-                      <td>{dado.login}</td>
-                      <td>{dado.admin ? 'Sim' : 'Não'}</td>
+                      <td>{dado.pontoDeReferencia}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -130,4 +123,4 @@ function ListagemCliente() {
   );
 }
 
-export default ListagemCliente;
+export default ListagemEstabelecimento;

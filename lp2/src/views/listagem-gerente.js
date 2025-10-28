@@ -71,21 +71,35 @@ function ListagemGerente() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Usuário
+                Novo Gerente
               </button>
               <table className='table table-hover'>
-                <thead>
+                 <thead>
                   <tr>
-                    <th scope='col'>Login</th>
-                    <th scope='col'>CPF</th>
-                    <th scope='col'>Ações</th>
+                    <th scope='col'>id</th>             
+                    <th scope='col'>nome</th>
+                    <th scope='col'>cpf</th>
+                    <th scope='col'>telefone</th>
+                    <th scope='col'>email</th>
+                    <th scope='col'>senha</th>
+                    <th scope='col'>cep</th>
+                    <th scope='col'>cidade</th>
+                    <th scope='col'>logadouro</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.login}</td>
+                      <td>{dado.id}</td>
+                      <td>{dado.nome}</td>
                       <td>{dado.cpf}</td>
+                      <td>{dado.telefone}</td>
+                      <td>{dado.email}</td>
+                      <td>{dado.senha}</td>
+                      <td>{dado.cep}</td>
+                      <td>{dado.cidade}</td>
+                      <td>{dado.logadouro}</td>
+                      <td>{dado.login}</td>
                       <td>{dado.admin ? 'Sim' : 'Não'}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>

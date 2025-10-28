@@ -43,6 +43,20 @@ function Navbar(props) {
               label='Proprietario'
             />
           </ul>
+          <ul className='navbar-nav'>
+            <NavbarItem
+              render='true'
+              href='/listagem-estabelecimento'
+              label='Estabelecimento'
+            />
+          </ul>
+          <ul className='navbar-nav'>
+            <NavbarItem
+              render='true'
+              href='/listagem-cupom'
+              label='Cupom'
+            />
+          </ul>
         </div>
       </div>
     </div>
