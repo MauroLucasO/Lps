@@ -5,6 +5,7 @@ import ListagemGerente from './views/listagem-gerente';
 import ListagemProprietario from './views/listagem-proprietario';
 import ListagemEstabelecimento from './views/listagem-estabelecimento';
 import ListagemCupom from './views/listagem-cupom';
+import ListagemProduto from './views/listagem-produto';
 
 import Login from './views/login'
 
@@ -50,7 +51,12 @@ function Rotas(props) {
           path='/listagem-cupom/'
           element={<ListagemCupom/>}
         />
+        <Route
+          path='/listagem-produto/'
+          element={<ListagemProduto/>}
+        />
         </Routes>
+        
     </BrowserRouter>
   );
 }
