@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/cupom`;
+const baseURL = `${BASE_URL}-1/cupom`;
 
 function ListagemCupom() {
   const navigate = useNavigate();
@@ -80,8 +80,7 @@ function ListagemCupom() {
                     <th scope='col'>desconto</th>
                     <th scope='col'>duracao</th>
                     <th scope='col'>nome</th>
-                    <th scope='col'>idEstabelecimento</th>
-                    
+                    <th scope='col'>estabelecimento</th>                     
                   </tr>
                 </thead>
                 <tbody>
@@ -91,7 +90,7 @@ function ListagemCupom() {
                       <td>{dado.desconto}</td>
                       <td>{dado.duracao}</td>
                       <td>{dado.nome}</td>
-                      <td>{dado.idEstabelecimento}</td>
+                      <td>{dado.estabelecimento}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

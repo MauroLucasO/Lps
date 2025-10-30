@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}/proprietario`;
+const baseURL = `${BASE_URL}-1/proprietario`;
 
 function ListagemProprietario() {
   const navigate = useNavigate();
@@ -81,7 +81,6 @@ function ListagemProprietario() {
                     <th scope='col'>cpf</th>
                     <th scope='col'>telefone</th>
                     <th scope='col'>email</th>
-                    <th scope='col'>senha</th>
                     <th scope='col'>cep</th>
                     <th scope='col'>cidade</th>
                     <th scope='col'>logadouro</th>
@@ -95,7 +94,6 @@ function ListagemProprietario() {
                       <td>{dado.cpf}</td>
                       <td>{dado.telefone}</td>
                       <td>{dado.email}</td>
-                      <td>{dado.senha}</td>
                       <td>{dado.cep}</td>
                       <td>{dado.cidade}</td>
                       <td>{dado.logadouro}</td>
