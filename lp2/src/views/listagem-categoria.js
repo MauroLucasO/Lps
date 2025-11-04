@@ -18,7 +18,7 @@ import { BASE_URL } from '../config/axios';
 
 const baseURL = `${BASE_URL}-2/produto`;
 
-function ListagemProduto() {
+function ListagemCategoria() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
@@ -40,7 +40,7 @@ function ListagemProduto() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Produto excluído com sucesso!`);
+        mensagemSucesso(`Categoria excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemProduto() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o produto`);
+        mensagemErro(`Erro ao excluir o categoria`);
       });
   }
 
@@ -62,7 +62,7 @@ function ListagemProduto() {
 
   return (
     <div className='container'>
-      <Card title='Listagem de Produto'>
+      <Card title='Listagem de Categoria'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
@@ -71,14 +71,13 @@ function ListagemProduto() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Produto
+                Nova Categoria
               </button>
               <table className='table table-hover'>
                 <thead>
                   <tr>
                     <th scope='col'>id</th>             
                     <th scope='col'>nome</th>
-                    <th scope='col'>valor</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +85,6 @@ function ListagemProduto() {
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
                       <td>{dado.nome}</td>
-                      <td>{dado.valor}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -115,4 +113,4 @@ function ListagemProduto() {
   );
 }
 
-export default ListagemProduto;
+export default ListagemCategoria;

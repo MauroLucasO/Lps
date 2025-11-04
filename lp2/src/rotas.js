@@ -6,6 +6,9 @@ import ListagemProprietario from './views/listagem-proprietario';
 import ListagemEstabelecimento from './views/listagem-estabelecimento';
 import ListagemCupom from './views/listagem-cupom';
 import ListagemProduto from './views/listagem-produto';
+import ListagemEstoque from './views/listagem-estoque';
+import ListagemItemPedido from './views/listagem-itemPedido';
+import ListagemCategoria from './views/listagem-categoria';
 
 import Login from './views/login'
 
@@ -54,6 +57,18 @@ function Rotas(props) {
         <Route
           path='/listagem-produto/'
           element={<ListagemProduto/>}
+        />
+        <Route
+          path='/listagem-estoque/'
+          element={<ListagemEstoque/>}
+        />
+        <Route
+          path='/listagem-itemPedido/'
+          element={<ListagemItemPedido/>}
+        />
+        <Route
+          path='/listagem-categoria/'
+          element={<ListagemCategoria/>}
         />
         </Routes>
         

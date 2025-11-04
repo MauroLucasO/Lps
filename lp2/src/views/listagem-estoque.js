@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}-2/produto`;
+const baseURL = `${BASE_URL}-2/estoque`;
 
-function ListagemProduto() {
+function ListagemEstoque() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-Produto`);
+    navigate(`/cadastro-Estoque`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-produto/${id}`);
+    navigate(`/cadastro-estoque/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemProduto() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Produto excluído com sucesso!`);
+        mensagemSucesso(`Estoque excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemProduto() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o produto`);
+        mensagemErro(`Erro ao excluir o estoque`);
       });
   }
 
@@ -62,7 +62,7 @@ function ListagemProduto() {
 
   return (
     <div className='container'>
-      <Card title='Listagem de Produto'>
+      <Card title='Listagem de Estoque'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
@@ -71,22 +71,20 @@ function ListagemProduto() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo Produto
+                Novo Estoque
               </button>
               <table className='table table-hover'>
                 <thead>
                   <tr>
                     <th scope='col'>id</th>             
-                    <th scope='col'>nome</th>
-                    <th scope='col'>valor</th>
+                    <th scope='col'>quantidade</th>
                   </tr>
                 </thead>
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
-                      <td>{dado.nome}</td>
-                      <td>{dado.valor}</td>
+                      <td>{dado.quantidade}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
@@ -115,4 +113,4 @@ function ListagemProduto() {
   );
 }
 
-export default ListagemProduto;
+export default ListagemEstoque;
