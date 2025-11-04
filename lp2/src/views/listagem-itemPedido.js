@@ -76,7 +76,8 @@ function ListagemItemPedido() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>id</th>             
+                    <th scope='col'>id</th>
+                    <th scope='col'>nome</th>             
                     <th scope='col'>quantidade</th>
                     <th scope='col'>valorTotal</th>
                   </tr>
@@ -85,6 +86,7 @@ function ListagemItemPedido() {
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
+                      <td>{dado.nome}</td>
                       <td>{dado.quantidade}</td>
                       <td>{dado.valorTotal}</td>
                       <td>
