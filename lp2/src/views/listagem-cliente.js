@@ -83,7 +83,7 @@ function ListagemCliente() {
                     <th scope='col'>email</th>
                     <th scope='col'>cep</th>
                     <th scope='col'>cidade</th>
-                    <th scope='col'>logadouro</th>
+                    <th scope='col'>logradouro</th>
                     <th scope='col'>admin</th>
                   </tr>
                 </thead>
@@ -97,7 +97,7 @@ function ListagemCliente() {
                       <td>{dado.email}</td>
                       <td>{dado.cep}</td>
                       <td>{dado.cidade}</td>
-                      <td>{dado.logadouro}</td>
+                      <td>{dado.logradouro}</td>
                       <td>{dado.login}</td>
                       <td>{dado.admin ? 'Sim' : 'Não'}</td>
                       <td>

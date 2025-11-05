@@ -16,17 +16,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}-2/produto`;
+const baseURL = `${BASE_URL}-2/categoria`;
 
 function ListagemCategoria() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-Produto`);
+    navigate(`/cadastro-categoria`);
   };
 
   const editar = (id) => {
-    navigate(`/cadastro-produto/${id}`);
+    navigate(`/cadastro-categoria/${id}`);
   };
 
   const [dados, setDados] = React.useState(null);
@@ -40,7 +40,7 @@ function ListagemCategoria() {
         headers: { 'Content-Type': 'application/json' },
       })
       .then(function (response) {
-        mensagemSucesso(`Categoria excluído com sucesso!`);
+        mensagemSucesso(`categoria excluído com sucesso!`);
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,7 +48,7 @@ function ListagemCategoria() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o categoria`);
+        mensagemErro(`Erro ao excluir o Item Pedido`);
       });
   }
 
@@ -76,9 +76,9 @@ function ListagemCategoria() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>id</th>             
+                    <th scope='col'>id</th>
                     <th scope='col'>nome</th>
-                    <th scope='col'>tipo</th>
+                    <th scope='col'>nomecategoria</th>             
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +86,7 @@ function ListagemCategoria() {
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
                       <td>{dado.nome}</td>
-                      <td>{dado.tipo}</td>
+                      <td>{dado.nomecategoria}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

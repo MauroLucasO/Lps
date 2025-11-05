@@ -81,7 +81,7 @@ function ListagemEstabelecimento() {
                     <th scope='col'>CNPJ</th>
                     <th scope='col'>telefone</th>
                     <th scope='col'>cidade</th>
-                    <th scope='col'>logadouro</th>
+                    <th scope='col'>logradouro</th>
                     <th scope='col'>pontoDeReferencia</th>
                   </tr>
                 </thead>
@@ -93,7 +93,7 @@ function ListagemEstabelecimento() {
                       <td>{dado.CNPJ}</td>
                       <td>{dado.telefone}</td>
                       <td>{dado.cidade}</td>
-                      <td>{dado.logadouro}</td>
+                      <td>{dado.logradouro}</td>
                       <td>{dado.pontoDeReferencia}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
