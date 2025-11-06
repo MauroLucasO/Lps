@@ -13,6 +13,7 @@ import ListagemCategoria from './views/listagem-categoria';
 import CadastroCliente from './views/cadastro-cliente';
 import CadastroGerente from './views/cadastro-gerente';
 import CadastroProprietario from './views/cadastro-proprietario';
+import CadastroEstabelecimento from './views/cadastro-estabelecimento';
 
 import Login from './views/login'
 
@@ -37,6 +38,11 @@ function Rotas(props) {
          <Route
           path='/cadastro-proprietario/:idParam?'
           element={<CadastroProprietario />}
+        />
+
+        <Route
+          path='/cadastro-estabelecimento/:idParam?'
+          element={<CadastroEstabelecimento />}
         />
 
         <Route
