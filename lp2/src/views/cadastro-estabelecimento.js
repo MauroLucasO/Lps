@@ -21,7 +21,7 @@ function CadastroEstabelecimento() {
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
-  const [cnpj, setCNPJ] = useState('');
+  const [CNPJ, setCNPJ] = useState('');
   const [telefone, setTelefone] = useState('');
   const [cidade, setCidade] = useState('');
 
@@ -37,14 +37,14 @@ function CadastroEstabelecimento() {
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setCNPJ(dados.cnpj);
+      setCNPJ(dados.CNPJ);
       setTelefone(dados.telefone);
       setCidade(dados.cidade);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, cnpj, telefone, cidade };
+    let data = { id, nome, CNPJ, telefone, cidade };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -79,9 +79,9 @@ function CadastroEstabelecimento() {
     });
     setId(dados.id);
     setNome(dados.nome);
-    setCNPJ(dados.cnpj);
+    setCNPJ(dados.CNPJ);
     setTelefone(dados.telefone);
-    setCidade('');
+    setCidade(dados.cidade);
   }
 
   useEffect(() => {
@@ -111,7 +111,7 @@ function CadastroEstabelecimento() {
                   type='text'
                   maxLength='11'
                   id='inputCNPJ'
-                  value={cnpj}
+                  value={CNPJ}
                   className='form-control'
                   name='cnpj'
                   onChange={(e) => setCNPJ(e.target.value)}
@@ -151,7 +151,7 @@ function CadastroEstabelecimento() {
 
                 <button
                   onClick={() => {
-                    if (!nome && !cnpj && !telefone && !cidade) {
+                    if (!nome && !CNPJ && !telefone && !cidade) {
                       navigate(-1); 
                     } else {
                       const confirmar = window.confirm(
