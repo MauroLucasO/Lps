@@ -24,7 +24,6 @@ function CadastroCliente() {
   const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
   const [senhaRepeticao, setSenhaRepeticao] = useState('');
-  const [admin, setAdmin] = useState(false);
 
   const [dados, setDados] = useState([]);
 
@@ -35,19 +34,17 @@ function CadastroCliente() {
       setCpf('');
       setSenha('');
       setSenhaRepeticao('');
-      setAdmin(false);
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setCpf(dados.cpf);
       setSenha('');
       setSenhaRepeticao('');
-      setAdmin(dados.admin);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, cpf, senha, senhaRepeticao, admin };
+    let data = { id, nome, cpf, senha, senhaRepeticao };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -85,7 +82,6 @@ function CadastroCliente() {
     setCpf(dados.cpf);
     setSenha('');
     setSenhaRepeticao('');
-    setAdmin(dados.admin);
   }
 
   useEffect(() => {
@@ -141,17 +137,7 @@ function CadastroCliente() {
                   onChange={(e) => setSenhaRepeticao(e.target.value)}
                 />
               </FormGroup>
-              <FormGroup>
-                <input
-                  className='form-check-input'
-                  type='checkbox'
-                  id='checkAdmin'
-                  checked={admin}
-                  name='admin'
-                  onChange={(e) => setAdmin(e.target.checked)}
-                />
-                Administrador
-              </FormGroup>
+              
               <Stack spacing={1} padding={1} direction='row'>
                 <button
                   onClick={salvar}

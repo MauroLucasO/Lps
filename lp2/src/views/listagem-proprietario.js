@@ -98,7 +98,6 @@ function ListagemProprietario() {
                       <td>{dado.cidade}</td>
                       <td>{dado.logradouro}</td>
                       <td>{dado.login}</td>
-                      <td>{dado.admin ? 'Não' : 'Sim'}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

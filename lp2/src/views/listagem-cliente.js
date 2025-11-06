@@ -84,7 +84,6 @@ function ListagemCliente() {
                     <th scope='col'>cep</th>
                     <th scope='col'>cidade</th>
                     <th scope='col'>logradouro</th>
-                    <th scope='col'>admin</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,7 +98,6 @@ function ListagemCliente() {
                       <td>{dado.cidade}</td>
                       <td>{dado.logradouro}</td>
                       <td>{dado.login}</td>
-                      <td>{dado.admin ? 'Sim' : 'Não'}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton
