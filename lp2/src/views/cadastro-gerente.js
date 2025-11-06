@@ -22,6 +22,11 @@ function CadastroGerente() {
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [cep, setCep] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [logradouro, setLogradouro] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [senhaRepeticao, setSenhaRepeticao] = useState('');
 
@@ -32,19 +37,29 @@ function CadastroGerente() {
       setId('');
       setNome('');
       setCpf('');
+      setTelefone('');
+      setCep('');
+      setCidade ('');
+      setLogradouro ('');
+      setEmail ('');
       setSenha('');
       setSenhaRepeticao('');
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setCpf(dados.cpf);
+      setTelefone(dados.telefone);
+      setCep(dados.cep);
+      setCidade (dados.cidade);
+      setLogradouro (dados.logradouro);
+      setEmail ('');
       setSenha('');
       setSenhaRepeticao('');
     }
   }
 
   async function salvar() {
-    let data = { id, nome, cpf, senha, senhaRepeticao };
+    let data = { id, nome, cpf, telefone, cep, cidade, logradouro, email, senha, senhaRepeticao };
     data = JSON.stringify(data);
 
     if (idParam == null) {
@@ -78,11 +93,16 @@ function CadastroGerente() {
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
-    setId(dados.id);
-    setNome(dados.nome);
-    setCpf(dados.cpf);
-    setSenha('');
-    setSenhaRepeticao('');
+      setId(dados.id);
+      setNome(dados.nome);
+      setCpf(dados.cpf);
+      setTelefone(dados.telefone);
+      setCep(dados.cep);
+      setCidade (dados.cidade);
+      setLogradouro (dados.logradouro);
+      setEmail ('');
+      setSenha('');
+      setSenhaRepeticao('');
   }
 
   useEffect(() => {
@@ -119,6 +139,58 @@ function CadastroGerente() {
                   onChange={(e) => setCpf(e.target.value)}
                 />
               </FormGroup>
+              <FormGroup label='Telefone: *' htmlFor='inputTelefone'>
+                <input
+                  type='text'
+                  maxLength='15'
+                  id='inputTelefone'
+                  value={telefone}
+                  className='form-control'
+                  name='telefone'
+                  onChange={(e) => setTelefone(e.target.value)}
+                />
+              </FormGroup>
+              <FormGroup label='CEP: *' htmlFor='inputCep'>
+                <input
+                  type='text'
+                  maxLength='9'
+                  id='inputCep'
+                  value={cep}
+                  className='form-control'
+                  name='cep'
+                  onChange={(e) => setCep(e.target.value)}
+                />
+              </FormGroup>
+              <FormGroup label='Cidade: *' htmlFor='inputCidade'>
+                <input
+                  type='text'
+                  id='inputCidade'
+                  value={cidade}
+                  className='form-control'
+                  name='cidade'
+                  onChange={(e) => setCidade(e.target.value)}
+                />
+              </FormGroup>
+              <FormGroup label='Logradouro: *' htmlFor='inputLogradouro'>
+                <input
+                  type='text'
+                  id='inputLogradouro'
+                  value={logradouro}
+                  className='form-control'
+                  name='logradouro'
+                  onChange={(e) => setLogradouro(e.target.value)}
+                />
+              </FormGroup>
+              <FormGroup label='Email: *' htmlFor='inputEmail'>
+                <input
+                  type='email'
+                  id='inputEmail'
+                  value={email}
+                  className='form-control'
+                  name='email'
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </FormGroup>
               <FormGroup label='Senha: *' htmlFor='inputSenha'>
                 <input
                   type='password'
@@ -139,7 +211,7 @@ function CadastroGerente() {
                   onChange={(e) => setSenhaRepeticao(e.target.value)}
                 />
               </FormGroup>
-              
+
               <Stack spacing={1} padding={1} direction='row'>
                 <button
                   onClick={salvar}
