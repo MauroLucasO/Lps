@@ -10,6 +10,10 @@ import ListagemEstoque from './views/listagem-estoque';
 import ListagemItemPedido from './views/listagem-itemPedido';
 import ListagemCategoria from './views/listagem-categoria';
 
+import CadastroCliente from './views/cadastro-cliente';
+import CadastroGerente from './views/cadastro-gerente';
+import CadastroProprietario from './views/cadastro-proprietario';
+
 import Login from './views/login'
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
@@ -18,22 +22,23 @@ function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<Login />} />
-        {/*
-        <Route
+        <Route path='/login' element={<Login />} 
+        />
+         <Route
           path='/cadastro-cliente/:idParam?'
           element={<CadastroCliente />}
         />
+    
         <Route
-          path='/cadastro-cliente/:idParam?'
+          path='/cadastro-gerente/:idParam?'
           element={<CadastroGerente />}
         />
-        <Route
-          path='/cadastro-cliente/:idParam?'
+        
+         <Route
+          path='/cadastro-proprietario/:idParam?'
           element={<CadastroProprietario />}
         />
-        */}
-      
+
         <Route
           path='/listagem-cliente/'
           element={<ListagemCliente/>}
