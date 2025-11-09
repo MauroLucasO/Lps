@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
-
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
 
@@ -13,17 +12,15 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-function CadastroProprietario() {
+function CadastroCategoria() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/proprietario`;
+  const baseURL = `${BASE_URL}-2/categoria`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [senha, setSenha] = useState('');
-  const [senhaRepeticao, setSenhaRepeticao] = useState('');
+  const [nomecategoria, setNomecategoria] = useState('');
 
   const [dados, setDados] = useState([]);
 
@@ -31,29 +28,26 @@ function CadastroProprietario() {
     if (idParam == null) {
       setId('');
       setNome('');
-      setCpf('');
-      setSenha('');
-      setSenhaRepeticao('');
+      setNomecategoria('');
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setCpf(dados.cpf);
-      setSenha('');
-      setSenhaRepeticao('');
+      setNomecategoria(dados.nomecategoria);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, cpf, senha, senhaRepeticao };
+    let data = { id, nome, nomecategoria };
     data = JSON.stringify(data);
+
     if (idParam == null) {
       await axios
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Proprietário ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-proprietario`);
+          mensagemSucesso(`Categoria ${nome} cadastrada com sucesso!`);
+          navigate(`/listagem-categoria`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -64,8 +58,8 @@ function CadastroProprietario() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Proprietário ${nome} alterado com sucesso!`);
-          navigate(`/listagem-proprietario`);
+          mensagemSucesso(`Categoria ${nome} alterada com sucesso!`);
+          navigate(`/listagem-categoria`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -79,9 +73,7 @@ function CadastroProprietario() {
     });
     setId(dados.id);
     setNome(dados.nome);
-    setCpf(dados.cpf);
-    setSenha('');
-    setSenhaRepeticao('');
+    setNomecategoria(dados.nomecategoria);
   }
 
   useEffect(() => {
@@ -92,11 +84,11 @@ function CadastroProprietario() {
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Proprietário'>
+      <Card title='Cadastro de Categoria'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome: *' htmlFor='inputNome'>
+              <FormGroup label='Nome da Categoria: *' htmlFor='inputNome'>
                 <input
                   type='text'
                   id='inputNome'
@@ -106,35 +98,15 @@ function CadastroProprietario() {
                   onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
-              <FormGroup label='CPF: *' htmlFor='inputCpf'>
+
+              <FormGroup label='Nome do Produto: *' htmlFor='inputNomeCategoria'>
                 <input
                   type='text'
-                  maxLength='11'
-                  id='inputCpf'
-                  value={cpf}
+                  id='inputNomeCategoria'
+                  value={nomecategoria}
                   className='form-control'
-                  name='cpf'
-                  onChange={(e) => setCpf(e.target.value)}
-                />
-              </FormGroup>
-              <FormGroup label='Senha: *' htmlFor='inputSenha'>
-                <input
-                  type='password'
-                  id='inputSenha'
-                  value={senha}
-                  className='form-control'
-                  name='senha'
-                  onChange={(e) => setSenha(e.target.value)}
-                />
-              </FormGroup>
-              <FormGroup label='Repita a Senha: *' htmlFor='inputRepitaSenha'>
-                <input
-                  type='password'
-                  id='inputRepitaSenha'
-                  value={senhaRepeticao}
-                  className='form-control'
-                  name='senhaRepeticao'
-                  onChange={(e) => setSenhaRepeticao(e.target.value)}
+                  name='nomecategoria'
+                  onChange={(e) => setNomecategoria(e.target.value)}
                 />
               </FormGroup>
 
@@ -144,13 +116,13 @@ function CadastroProprietario() {
                   type='button'
                   className='btn btn-success'
                 >
-                  Salvar
+                  Cadastrar
                 </button>
 
                 <button
                   onClick={() => {
-                    if (!nome && !cpf && !senha && !senhaRepeticao) {
-                      navigate(-1); 
+                    if (!nome && !nomecategoria) {
+                      navigate(-1);
                     } else {
                       const confirmar = window.confirm(
                         'Deseja realmente cancelar e sair da página? As alterações não salvas serão perdidas.'
@@ -176,4 +148,4 @@ function CadastroProprietario() {
   );
 }
 
-export default CadastroProprietario;
+export default CadastroCategoria;

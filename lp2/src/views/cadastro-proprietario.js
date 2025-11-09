@@ -99,7 +99,7 @@ function CadastroProprietario() {
       setCep(dados.cep);
       setCidade (dados.cidade);
       setLogradouro (dados.logradouro);
-      setEmail ('');
+      setEmail (dados.email);
       setSenha('');
       setSenhaRepeticao('');
   }
@@ -216,7 +216,7 @@ function CadastroProprietario() {
                   type='button'
                   className='btn btn-success'
                 >
-                  Salvar
+                  Cadastrar
                 </button>
 
                 <button

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
+
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
 
@@ -12,19 +13,16 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-function CadastroEstabelecimento() {
+function CadastroItemPedido() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/estabelecimento`;
+  const baseURL = `${BASE_URL}-2/itempedido`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
-  const [CNPJ, setCNPJ] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [cidade, setCidade] = useState('');
-  const [logradouro, setLogradouro] = useState('');
-  const [pontoDeReferencia, setPontoDeReferencia] = useState('');
+  const [quantidade, setQuantidade] = useState(1);
+  const [valorTotal, setValorTotal] = useState(0);
 
   const [dados, setDados] = useState([]);
 
@@ -32,24 +30,18 @@ function CadastroEstabelecimento() {
     if (idParam == null) {
       setId('');
       setNome('');
-      setCNPJ('');
-      setTelefone('');
-      setCidade('');
-      setLogradouro('');
-      setPontoDeReferencia('');
+      setQuantidade(1);
+      setValorTotal(0);
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setCNPJ(dados.CNPJ);
-      setTelefone(dados.telefone);
-      setCidade(dados.cidade);
-      setLogradouro(dados.logradouro);
-      setPontoDeReferencia(dados.pontoDeReferencia);
+      setQuantidade(dados.quantidade);
+      setValorTotal(dados.valorTotal);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, CNPJ, telefone, cidade, logradouro, pontoDeReferencia };
+    let data = { id, nome, quantidade, valorTotal };
     data = JSON.stringify(data);
 
     if (idParam == null) {
@@ -58,8 +50,8 @@ function CadastroEstabelecimento() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Estabelecimento ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-estabelecimento`);
+          mensagemSucesso(`Item de pedido ${nome} cadastrado com sucesso!`);
+          navigate(`/listagem-itemPedido`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -70,8 +62,8 @@ function CadastroEstabelecimento() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Estabelecimento ${nome} alterado com sucesso!`);
-          navigate(`/listagem-estabelecimento`);
+          mensagemSucesso(`Item de pedido ${nome} alterado com sucesso!`);
+          navigate(`/listagem-itemPedido`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -83,28 +75,26 @@ function CadastroEstabelecimento() {
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
-    setId(dados.id);
-    setNome(dados.nome);
-    setCNPJ(dados.CNPJ);
-    setTelefone(dados.telefone);
-    setCidade(dados.cidade);
-    setLogradouro(dados.logradouro);
-    setPontoDeReferencia(dados.pontoDeReferencia);
+      setId(dados.id);
+      setNome(dados.nome);
+      setQuantidade(dados.quantidade);
+      setValorTotal(dados.valorTotal);
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
+    buscar();
+    // eslint-disable-next-line
   }, [id]);
 
   if (!dados) return null;
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Estabelecimento'>
+      <Card title='Cadastro de Item de Pedido'>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome: *' htmlFor='inputNome'>
+              <FormGroup label='Nome do Item: *' htmlFor='inputNome'>
                 <input
                   type='text'
                   id='inputNome'
@@ -115,58 +105,25 @@ function CadastroEstabelecimento() {
                 />
               </FormGroup>
 
-              <FormGroup label='CNPJ: *' htmlFor='inputCNPJ'>
+              <FormGroup label='Quantidade: *' htmlFor='inputQuantidade'>
                 <input
-                  type='text'
-                  id='inputCNPJ'
-                  value={CNPJ}
+                  type='number'
+                  id='inputQuantidade'
+                  value={quantidade}
                   className='form-control'
-                  name='CNPJ'
-                  onChange={(e) => setCNPJ(e.target.value)}
+                  name='quantidade'
+                  onChange={(e) => setQuantidade(e.target.value)}
                 />
               </FormGroup>
 
-              <FormGroup label='Telefone: *' htmlFor='inputTelefone'>
+              <FormGroup label='Valor Total: *' htmlFor='inputValorTotal'>
                 <input
                   type='text'
-                  id='inputTelefone'
-                  value={telefone}
+                  id='inputValorTotal'
+                  value={valorTotal}
                   className='form-control'
-                  name='telefone'
-                  onChange={(e) => setTelefone(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label='Cidade: *' htmlFor='inputCidade'>
-                <input
-                  type='text'
-                  id='inputCidade'
-                  value={cidade}
-                  className='form-control'
-                  name='cidade'
-                  onChange={(e) => setCidade(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label='Logradouro: *' htmlFor='inputLogradouro'>
-                <input
-                  type='text'
-                  id='inputLogradouro'
-                  value={logradouro}
-                  className='form-control'
-                  name='logradouro'
-                  onChange={(e) => setLogradouro(e.target.value)}
-                />
-              </FormGroup>
-
-              <FormGroup label='Ponto de Referência: *' htmlFor='inputPontoDeReferencia'>
-                <input
-                  type='text'
-                  id='inputPontoDeReferencia'
-                  value={pontoDeReferencia}
-                  className='form-control'
-                  name='pontoDeReferencia'
-                  onChange={(e) => setPontoDeReferencia(e.target.value)}
+                  name='valorTotal'
+                  onChange={(e) => setValorTotal(e.target.value)}
                 />
               </FormGroup>
 
@@ -181,7 +138,7 @@ function CadastroEstabelecimento() {
 
                 <button
                   onClick={() => {
-                    if (!nome && !CNPJ && !telefone &&  !cidade && !logradouro && !pontoDeReferencia) {
+                    if (!nome && !quantidade && !valorTotal) {
                       navigate(-1);
                     } else {
                       const confirmar = window.confirm(
@@ -208,4 +165,4 @@ function CadastroEstabelecimento() {
   );
 }
 
-export default CadastroEstabelecimento;
+export default CadastroItemPedido;

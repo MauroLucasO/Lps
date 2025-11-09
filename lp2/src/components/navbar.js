@@ -71,13 +71,17 @@ function Navbar(props) {
               label='Estoque'
             />
           </ul>
+
+        {/*
            <ul className='navbar-nav'>
             <NavbarItem
               render='true'
               href='/listagem-itemPedido'
               label='ItemPedido'
-            />
-          </ul>
+            />  
+          </ul>*/
+        }
+        
            <ul className='navbar-nav'>
             <NavbarItem
               render='true'
