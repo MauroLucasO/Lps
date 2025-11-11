@@ -17,6 +17,8 @@ import CadastroEstabelecimento from './views/cadastro-estabelecimento';
 import CadastroCupom from './views/cadastro-cupom';
 import CadastroCategoria from './views/cadastro-categoria';
 import CadastroItemPedido from './views/cadastro-itemPedido';
+import CadastroEstoque from './views/cadastro-estoque';
+import CadastroProduto from './views/cadastro-produto';
 
 import Login from './views/login'
 
@@ -61,6 +63,16 @@ function Rotas(props) {
         <Route
           path='/cadastro-itemPedido/:idParam?'
           element={<CadastroItemPedido />}
+        />
+
+        <Route
+          path='/cadastro-estoque/'
+          element={<CadastroEstoque/>}
+        />
+
+        <Route
+          path='/cadastro-produto/'
+          element={<CadastroProduto/>}
         />
 
         <Route

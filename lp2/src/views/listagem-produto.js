@@ -22,7 +22,7 @@ function ListagemProduto() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-Produto`);
+    navigate(`/cadastro-produto`);
   };
 
   const editar = (id) => {
@@ -79,6 +79,7 @@ function ListagemProduto() {
                     <th scope='col'>id</th>             
                     <th scope='col'>nome</th>
                     <th scope='col'>valor</th>
+                    <th scope='col'>descrição</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,6 +88,7 @@ function ListagemProduto() {
                       <td>{dado.id}</td>
                       <td>{dado.nome}</td>
                       <td>{dado.valor}</td>
+                      <td>{dado.descricao}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

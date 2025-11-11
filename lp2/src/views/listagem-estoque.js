@@ -22,7 +22,7 @@ function ListagemEstoque() {
   const navigate = useNavigate();
 
   const cadastrar = () => {
-    navigate(`/cadastro-Estoque`);
+    navigate(`/cadastro-estoque`);
   };
 
   const editar = (id) => {
