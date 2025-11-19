@@ -58,6 +58,7 @@ function ListagemProduto() {
     });
   }, []);
 
+
   if (!dados) return null;
 
   return (
@@ -80,6 +81,7 @@ function ListagemProduto() {
                     <th scope='col'>nome</th>
                     <th scope='col'>valor</th>
                     <th scope='col'>descrição</th>
+                    <th scope='col'>Categoria</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -89,6 +91,7 @@ function ListagemProduto() {
                       <td>{dado.nome}</td>
                       <td>{dado.valor}</td>
                       <td>{dado.descricao}</td>
+                      <td>{dado.nomeCategoria}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

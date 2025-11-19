@@ -25,6 +25,7 @@ function CadastroProprietario() {
   const [telefone, setTelefone] = useState('');
   const [cep, setCep] = useState('');
   const [cidade, setCidade] = useState('');
+  const [estado, setEstado] = useState('');
   const [logradouro, setLogradouro] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -40,6 +41,7 @@ function CadastroProprietario() {
       setTelefone('');
       setCep('');
       setCidade ('');
+      setEstado ('');
       setLogradouro ('');
       setEmail ('');
       setSenha('');
@@ -51,6 +53,7 @@ function CadastroProprietario() {
       setTelefone(dados.telefone);
       setCep(dados.cep);
       setCidade (dados.cidade);
+      setEstado (dados.estado);
       setLogradouro (dados.logradouro);
       setEmail ('');
       setSenha('');
@@ -59,7 +62,7 @@ function CadastroProprietario() {
   }
 
   async function salvar() {
-    let data = { id, nome, cpf, telefone, cep, cidade, logradouro, email, senha, senhaRepeticao };
+    let data = { id, nome, cpf, telefone, cep, cidade, estado, logradouro, email, senha, senhaRepeticao };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -98,6 +101,7 @@ function CadastroProprietario() {
       setTelefone(dados.telefone);
       setCep(dados.cep);
       setCidade (dados.cidade);
+      setEstado (dados.estado);
       setLogradouro (dados.logradouro);
       setEmail (dados.email);
       setSenha('');
@@ -169,6 +173,16 @@ function CadastroProprietario() {
                   onChange={(e) => setCidade(e.target.value)}
                 />
               </FormGroup>
+              <FormGroup label='Estado: *' htmlFor='inputEstado'>
+                <input
+                  type='text'
+                  id='inputEstado'
+                  value={estado}
+                  className='form-control'
+                  name='estado'
+                  onChange={(e) => setEstado(e.target.value)}
+                />
+              </FormGroup>
               <FormGroup label='Logradouro: *' htmlFor='inputLogradouro'>
                 <input
                   type='text'
@@ -221,7 +235,7 @@ function CadastroProprietario() {
 
                 <button
                   onClick={() => {
-                    if (!nome && !cpf && !senha && !senhaRepeticao) {
+                    if (!nome && !cpf && !senha && !senhaRepeticao && !cidade && !estado && !cep && !logradouro && !email && !telefone) {
                       navigate(-1); 
                     } else {
                       const confirmar = window.confirm(

@@ -22,6 +22,7 @@ function CadastroProduto() {
   const [nome, setNome] = useState('');
   const [valor, setValor] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [idCategoria, setIdCategoria] = useState(0);
 
   const [dados, setDados] = useState([]);
 
@@ -31,16 +32,18 @@ function CadastroProduto() {
       setNome('');
       setValor('');
       setDescricao('');
+      setIdCategoria(0);
     } else {
       setId(dados.id);
       setNome(dados.nome);
       setValor(dados.valor);
       setDescricao(dados.descricao);
+      setIdCategoria(dados.idCategoria)
     }
   }
 
   async function salvar() {
-    let data = { id, nome, valor, descricao };
+    let data = { id, nome, valor, descricao, idCategoria };
     data = JSON.stringify(data);
 
     if (idParam == null) {
@@ -78,13 +81,23 @@ function CadastroProduto() {
       setNome(dados.nome);
       setValor(dados.valor);
       setDescricao(dados.descricao);
+      setIdCategoria(dados.idCategoria)
   }
+
+  const [dadosCategoria, setDadosCategoria] = React.useState(null);
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}-2/categoria`).then((response) => {
+      setDadosCategoria(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     buscar(); // eslint-disable-next-line
   }, [id]);
 
   if (!dados) return null;
+  if (!dadosCategoria) return null;
 
   return (
     <div className='container'>
@@ -123,6 +136,25 @@ function CadastroProduto() {
                   name='descricao'
                   onChange={(e) => setDescricao(e.target.value)}
                 />
+              </FormGroup>
+
+              <FormGroup label='Categoria:' htmlFor='selectCategoria'>
+                <select
+                  className='form-select'
+                  id='selectCategoria'
+                  name='idCategoria'
+                  value={idCategoria}
+                  onChange={(e) => setIdCategoria(e.target.value)}
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosCategoria.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nome}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>

@@ -20,7 +20,7 @@ function CadastroEstabelecimento() {
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
-  const [CNPJ, setCNPJ] = useState('');
+  const [cnpj, setCnpj] = useState('');
   const [telefone, setTelefone] = useState('');
   const [cidade, setCidade] = useState('');
   const [logradouro, setLogradouro] = useState('');
@@ -32,7 +32,7 @@ function CadastroEstabelecimento() {
     if (idParam == null) {
       setId('');
       setNome('');
-      setCNPJ('');
+      setCnpj('');
       setTelefone('');
       setCidade('');
       setLogradouro('');
@@ -40,7 +40,7 @@ function CadastroEstabelecimento() {
     } else {
       setId(dados.id);
       setNome(dados.nome);
-      setCNPJ(dados.CNPJ);
+      setCnpj(dados.cnpj);
       setTelefone(dados.telefone);
       setCidade(dados.cidade);
       setLogradouro(dados.logradouro);
@@ -49,7 +49,7 @@ function CadastroEstabelecimento() {
   }
 
   async function salvar() {
-    let data = { id, nome, CNPJ, telefone, cidade, logradouro, pontoDeReferencia };
+    let data = { id, nome, cnpj, telefone, cidade, logradouro, pontoDeReferencia };
     data = JSON.stringify(data);
 
     if (idParam == null) {
@@ -85,7 +85,7 @@ function CadastroEstabelecimento() {
     });
     setId(dados.id);
     setNome(dados.nome);
-    setCNPJ(dados.CNPJ);
+    setCnpj(dados.cnpj);
     setTelefone(dados.telefone);
     setCidade(dados.cidade);
     setLogradouro(dados.logradouro);
@@ -115,14 +115,14 @@ function CadastroEstabelecimento() {
                 />
               </FormGroup>
 
-              <FormGroup label='CNPJ: *' htmlFor='inputCNPJ'>
+              <FormGroup label='CNPJ: *' htmlFor='inputCnpj'>
                 <input
                   type='text'
-                  id='inputCNPJ'
-                  value={CNPJ}
+                  id='inputCnpj'
+                  value={cnpj}
                   className='form-control'
-                  name='CNPJ'
-                  onChange={(e) => setCNPJ(e.target.value)}
+                  name='cnpj'
+                  onChange={(e) => setCnpj(e.target.value)}
                 />
               </FormGroup>
 
@@ -181,7 +181,7 @@ function CadastroEstabelecimento() {
 
                 <button
                   onClick={() => {
-                    if (!nome && !CNPJ && !telefone &&  !cidade && !logradouro && !pontoDeReferencia) {
+                    if (!nome && !cnpj && !telefone &&  !cidade && !logradouro && !pontoDeReferencia) {
                       navigate(-1);
                     } else {
                       const confirmar = window.confirm(

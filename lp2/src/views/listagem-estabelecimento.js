@@ -90,7 +90,7 @@ function ListagemEstabelecimento() {
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
                       <td>{dado.nome}</td>
-                      <td>{dado.CNPJ}</td>
+                      <td>{dado.cnpj}</td>
                       <td>{dado.telefone}</td>
                       <td>{dado.cidade}</td>
                       <td>{dado.logradouro}</td>
