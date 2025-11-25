@@ -12,6 +12,9 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
 function CadastroEstabelecimento() {
   const { idParam } = useParams();
   const navigate = useNavigate();
@@ -19,7 +22,7 @@ function CadastroEstabelecimento() {
   const baseURL = `${BASE_URL}-1/estabelecimento`;
 
   const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
+  const [nome, setNome] = useState('');       
   const [cnpj, setCnpj] = useState('');
   const [telefone, setTelefone] = useState('');
   const [cidade, setCidade] = useState('');
@@ -27,6 +30,14 @@ function CadastroEstabelecimento() {
   const [pontoDeReferencia, setPontoDeReferencia] = useState('');
 
   const [dados, setDados] = useState([]);
+
+  const [dadosNome, setDadosNome] = useState(null);
+
+  useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      setDadosNome(response.data);
+    });
+  }, []);
 
   function inicializar() {
     if (idParam == null) {
@@ -57,7 +68,7 @@ function CadastroEstabelecimento() {
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
-        .then(function (response) {
+        .then(function () {
           mensagemSucesso(`Estabelecimento ${nome} cadastrado com sucesso!`);
           navigate(`/listagem-estabelecimento`);
         })
@@ -69,7 +80,7 @@ function CadastroEstabelecimento() {
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
-        .then(function (response) {
+        .then(function () {
           mensagemSucesso(`Estabelecimento ${nome} alterado com sucesso!`);
           navigate(`/listagem-estabelecimento`);
         })
@@ -81,22 +92,26 @@ function CadastroEstabelecimento() {
 
   async function buscar() {
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
+      const d = response.data;
+
+      setDados(d);
+      setId(d.id);
+      setNome(d.nome);
+      setCnpj(d.cnpj);
+      setTelefone(d.telefone);
+      setCidade(d.cidade);
+      setLogradouro(d.logradouro);
+      setPontoDeReferencia(d.pontoDeReferencia);
     });
-    setId(dados.id);
-    setNome(dados.nome);
-    setCnpj(dados.cnpj);
-    setTelefone(dados.telefone);
-    setCidade(dados.cidade);
-    setLogradouro(dados.logradouro);
-    setPontoDeReferencia(dados.pontoDeReferencia);
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+    if (idParam) {
+      buscar();
+    }
+  }, [idParam]);
 
-  if (!dados) return null;
+  if (!dadosNome) return null;
 
   return (
     <div className='container'>
@@ -104,14 +119,24 @@ function CadastroEstabelecimento() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome: *' htmlFor='inputNome'>
-                <input
-                  type='text'
-                  id='inputNome'
-                  value={nome}
-                  className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
+
+              <FormGroup label='Nome do Estabelecimento: *' htmlFor='comboNome'>
+                <Autocomplete
+                  id='comboNome'
+                  options={dadosNome}
+                  value={dadosNome.find((d) => d.nome === nome) || null}
+                  getOptionLabel={(option) => option.nome}
+                  onChange={(event, newValue) => {
+                    setNome(newValue ? newValue.nome : '');
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='outlined'
+                      size='small'
+                      placeholder='Selecione...'
+                    />
+                  )}
                 />
               </FormGroup>
 
@@ -181,7 +206,7 @@ function CadastroEstabelecimento() {
 
                 <button
                   onClick={() => {
-                    if (!nome && !cnpj && !telefone &&  !cidade && !logradouro && !pontoDeReferencia) {
+                    if (!nome && !cnpj && !telefone && !cidade && !logradouro && !pontoDeReferencia) {
                       navigate(-1);
                     } else {
                       const confirmar = window.confirm(
@@ -200,6 +225,7 @@ function CadastroEstabelecimento() {
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>

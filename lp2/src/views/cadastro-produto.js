@@ -12,6 +12,9 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
 function CadastroProduto() {
   const { idParam } = useParams();
   const navigate = useNavigate();
@@ -38,7 +41,7 @@ function CadastroProduto() {
       setNome(dados.nome);
       setValor(dados.valor);
       setDescricao(dados.descricao);
-      setIdCategoria(dados.idCategoria)
+      setIdCategoria(dados.idCategoria);
     }
   }
 
@@ -75,13 +78,15 @@ function CadastroProduto() {
 
   async function buscar() {
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
+      const d = response.data;
+
+      setDados(d);
+      setId(d.id);
+      setNome(d.nome);
+      setValor(d.valor);
+      setDescricao(d.descricao);
+      setIdCategoria(d.idCategoria);
     });
-      setId(dados.id);
-      setNome(dados.nome);
-      setValor(dados.valor);
-      setDescricao(dados.descricao);
-      setIdCategoria(dados.idCategoria)
   }
 
   const [dadosCategoria, setDadosCategoria] = React.useState(null);
@@ -93,11 +98,15 @@ function CadastroProduto() {
   }, []);
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+    if (idParam) {
+      buscar();
+    }
+  }, [idParam]);
 
-  if (!dados) return null;
   if (!dadosCategoria) return null;
+
+  const categoriaSelecionada =
+    dadosCategoria.find((c) => c.id === idCategoria) || null;
 
   return (
     <div className='container'>
@@ -105,6 +114,7 @@ function CadastroProduto() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
+
               <FormGroup label='Nome do Produto: *' htmlFor='inputNome'>
                 <input
                   type='text'
@@ -127,7 +137,7 @@ function CadastroProduto() {
                 />
               </FormGroup>
 
-              <FormGroup label='Descrição do Produto: *' htmlFor='inputValor'>
+              <FormGroup label='Descrição do Produto: *' htmlFor='inputDescricao'>
                 <input
                   type='text'
                   id='inputDescricao'
@@ -138,31 +148,28 @@ function CadastroProduto() {
                 />
               </FormGroup>
 
-              <FormGroup label='Categoria:' htmlFor='selectCategoria'>
-                <select
-                  className='form-select'
-                  id='selectCategoria'
-                  name='idCategoria'
-                  value={idCategoria}
-                  onChange={(e) => setIdCategoria(e.target.value)}
-                >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosCategoria.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nome}
-                    </option>
-                  ))}
-                </select>
+              <FormGroup label='Categoria:' htmlFor='comboCategoria'>
+                <Autocomplete
+                  id='comboCategoria'
+                  options={dadosCategoria}
+                  value={categoriaSelecionada}
+                  getOptionLabel={(option) => option.nome}
+                  onChange={(event, newValue) => {
+                    setIdCategoria(newValue ? newValue.id : 0);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder="Selecione..."
+                      variant='outlined'
+                      size='small'
+                    />
+                  )}
+                />
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>
-                <button
-                  onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
-                >
+                <button onClick={salvar} type='button' className='btn btn-success'>
                   Cadastrar
                 </button>
 
@@ -187,6 +194,7 @@ function CadastroProduto() {
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>
