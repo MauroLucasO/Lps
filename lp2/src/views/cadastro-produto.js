@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
@@ -28,9 +28,11 @@ function CadastroProduto() {
   const [idCategoria, setIdCategoria] = useState(0);
 
   const [dados, setDados] = useState([]);
+  const [dadosCategoria, setDadosCategoria] = useState(null);
+  const [dadosProduto, setDadosProduto] = useState(null);
 
-  function inicializar() {
-    if (idParam == null) {
+  const inicializar = () => {
+    if (!idParam) {
       setId('');
       setNome('');
       setValor('');
@@ -43,70 +45,68 @@ function CadastroProduto() {
       setDescricao(dados.descricao);
       setIdCategoria(dados.idCategoria);
     }
-  }
+  };
 
-  async function salvar() {
+  const salvar = async () => {
     let data = { id, nome, valor, descricao, idCategoria };
     data = JSON.stringify(data);
 
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
+    try {
+      if (!idParam) {
+        await axios.post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Produto ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-produto`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
         });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
+        mensagemSucesso(`Produto ${nome} cadastrado com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Produto ${nome} alterado com sucesso!`);
-          navigate(`/listagem-produto`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
         });
+        mensagemSucesso(`Produto ${nome} alterado com sucesso!`);
+      }
+      navigate(`/listagem-produto`);
+    } catch (error) {
+      mensagemErro(error.response?.data || 'Erro ao salvar produto');
     }
-  }
+  };
 
-  async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      const d = response.data;
-
-      setDados(d);
-      setId(d.id);
-      setNome(d.nome);
-      setValor(d.valor);
-      setDescricao(d.descricao);
-      setIdCategoria(d.idCategoria);
-    });
-  }
-
-  const [dadosCategoria, setDadosCategoria] = React.useState(null);
+  const buscar = useCallback(async () => {
+    if (idParam) {
+      try {
+        const response = await axios.get(`${baseURL}/${idParam}`);
+        const d = response.data;
+        setDados(d);
+        setId(d.id);
+        setNome(d.nome);
+        setValor(d.valor);
+        setDescricao(d.descricao);
+        setIdCategoria(d.idCategoria);
+      } catch (error) {
+        mensagemErro('Erro ao buscar produto');
+      }
+    }
+  }, [idParam, baseURL]);
 
   useEffect(() => {
     axios.get(`${BASE_URL}-2/categoria`).then((response) => {
       setDadosCategoria(response.data);
     });
+
+    axios.get(`${BASE_URL}-2/produto`).then((response) => {
+      setDadosProduto(response.data);
+    });
   }, []);
 
   useEffect(() => {
-    if (idParam) {
-      buscar();
-    }
-  }, [idParam]);
+    buscar();
+  }, [buscar]);
 
-  if (!dadosCategoria) return null;
+  if (!dadosCategoria || !dadosProduto) return null;
 
   const categoriaSelecionada =
     dadosCategoria.find((c) => c.id === idCategoria) || null;
+
+  const produtoSelecionado =
+    dadosProduto.find((p) => p.nome === nome) || null;
 
   return (
     <div className='container'>
@@ -115,14 +115,23 @@ function CadastroProduto() {
           <div className='col-lg-12'>
             <div className='bs-component'>
 
-              <FormGroup label='Nome do Produto: *' htmlFor='inputNome'>
-                <input
-                  type='text'
-                  id='inputNome'
-                  value={nome}
-                  className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
+              <FormGroup label='Nome do Produto: *' htmlFor='comboNome'>
+                <Autocomplete
+                  id='comboNome'
+                  options={dadosProduto}
+                  value={produtoSelecionado}
+                  getOptionLabel={(option) => option.nome}
+                  onChange={(event, newValue) => {
+                    setNome(newValue ? newValue.nome : '');
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder='Selecione o produto...'
+                      variant='outlined'
+                      size='small'
+                    />
+                  )}
                 />
               </FormGroup>
 
@@ -160,7 +169,7 @@ function CadastroProduto() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      placeholder="Selecione..."
+                      placeholder='Selecione...'
                       variant='outlined'
                       size='small'
                     />

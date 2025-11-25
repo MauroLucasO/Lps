@@ -30,17 +30,21 @@ function CadastroEstabelecimento() {
   const [pontoDeReferencia, setPontoDeReferencia] = useState('');
 
   const [dados, setDados] = useState([]);
-
   const [dadosNome, setDadosNome] = useState(null);
 
   useEffect(() => {
-    axios.get(baseURL).then((response) => {
-      setDadosNome(response.data);
-    });
-  }, []);
+    axios.get(baseURL)
+      .then((response) => {
+        setDadosNome(response.data);
+      })
+      .catch((error) => {
+        mensagemErro("Erro ao carregar estabelecimentos.");
+        console.error(error);
+      });
+  }, [baseURL]);
 
   function inicializar() {
-    if (idParam == null) {
+    if (!idParam) {
       setId('');
       setNome('');
       setCnpj('');
@@ -48,7 +52,7 @@ function CadastroEstabelecimento() {
       setCidade('');
       setLogradouro('');
       setPontoDeReferencia('');
-    } else {
+    } else if (dados) {
       setId(dados.id);
       setNome(dados.nome);
       setCnpj(dados.cnpj);
@@ -60,56 +64,46 @@ function CadastroEstabelecimento() {
   }
 
   async function salvar() {
-    let data = { id, nome, cnpj, telefone, cidade, logradouro, pontoDeReferencia };
-    data = JSON.stringify(data);
+    const data = JSON.stringify({ id, nome, cnpj, telefone, cidade, logradouro, pontoDeReferencia });
 
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function () {
-          mensagemSucesso(`Estabelecimento ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-estabelecimento`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
-        });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function () {
-          mensagemSucesso(`Estabelecimento ${nome} alterado com sucesso!`);
-          navigate(`/listagem-estabelecimento`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
-        });
+    try {
+      if (!idParam) {
+        await axios.post(baseURL, data, { headers: { 'Content-Type': 'application/json' } });
+        mensagemSucesso(`Estabelecimento ${nome} cadastrado com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, { headers: { 'Content-Type': 'application/json' } });
+        mensagemSucesso(`Estabelecimento ${nome} alterado com sucesso!`);
+      }
+      navigate(`/listagem-estabelecimento`);
+    } catch (error) {
+      mensagemErro(error.response?.data || "Erro ao salvar estabelecimento.");
     }
-  }
-
-  async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      const d = response.data;
-
-      setDados(d);
-      setId(d.id);
-      setNome(d.nome);
-      setCnpj(d.cnpj);
-      setTelefone(d.telefone);
-      setCidade(d.cidade);
-      setLogradouro(d.logradouro);
-      setPontoDeReferencia(d.pontoDeReferencia);
-    });
   }
 
   useEffect(() => {
+    async function buscar() {
+      try {
+        const response = await axios.get(`${baseURL}/${idParam}`);
+        const d = response.data;
+
+        setDados(d);
+        setId(d.id);
+        setNome(d.nome);
+        setCnpj(d.cnpj);
+        setTelefone(d.telefone);
+        setCidade(d.cidade);
+        setLogradouro(d.logradouro);
+        setPontoDeReferencia(d.pontoDeReferencia);
+      } catch (error) {
+        mensagemErro("Erro ao buscar estabelecimento.");
+        console.error(error);
+      }
+    }
+
     if (idParam) {
       buscar();
     }
-  }, [idParam]);
+  }, [idParam, baseURL]);
 
   if (!dadosNome) return null;
 
@@ -126,16 +120,12 @@ function CadastroEstabelecimento() {
                   options={dadosNome}
                   value={dadosNome.find((d) => d.nome === nome) || null}
                   getOptionLabel={(option) => option.nome}
-                  onChange={(event, newValue) => {
-                    setNome(newValue ? newValue.nome : '');
-                  }}
+                  onChange={(event, newValue) => setNome(newValue ? newValue.nome : '')}
                   renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant='outlined'
-                      size='small'
-                      placeholder='Selecione...'
-                    />
+                    <TextField {...params} 
+                    variant='outlined' 
+                    size='small' 
+                    placeholder='Selecione...' />
                   )}
                 />
               </FormGroup>
@@ -146,7 +136,6 @@ function CadastroEstabelecimento() {
                   id='inputCnpj'
                   value={cnpj}
                   className='form-control'
-                  name='cnpj'
                   onChange={(e) => setCnpj(e.target.value)}
                 />
               </FormGroup>
@@ -157,19 +146,25 @@ function CadastroEstabelecimento() {
                   id='inputTelefone'
                   value={telefone}
                   className='form-control'
-                  name='telefone'
                   onChange={(e) => setTelefone(e.target.value)}
                 />
               </FormGroup>
 
-              <FormGroup label='Cidade: *' htmlFor='inputCidade'>
-                <input
-                  type='text'
-                  id='inputCidade'
-                  value={cidade}
-                  className='form-control'
-                  name='cidade'
-                  onChange={(e) => setCidade(e.target.value)}
+              <FormGroup label='Cidade: *' htmlFor='comboCidade'>
+                <Autocomplete
+                  id='comboCidade'
+                  options={dadosNome}
+                  value={dadosNome.find((d) => d.cidade === cidade) || null}
+                  getOptionLabel={(option) => option.cidade || ''}
+                  onChange={(event, newValue) => setCidade(newValue ? newValue.cidade : '')}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='outlined'
+                      size='small'
+                      placeholder='Selecione a cidade...'
+                    />
+                  )}
                 />
               </FormGroup>
 
@@ -179,7 +174,6 @@ function CadastroEstabelecimento() {
                   id='inputLogradouro'
                   value={logradouro}
                   className='form-control'
-                  name='logradouro'
                   onChange={(e) => setLogradouro(e.target.value)}
                 />
               </FormGroup>
@@ -190,17 +184,12 @@ function CadastroEstabelecimento() {
                   id='inputPontoDeReferencia'
                   value={pontoDeReferencia}
                   className='form-control'
-                  name='pontoDeReferencia'
                   onChange={(e) => setPontoDeReferencia(e.target.value)}
                 />
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>
-                <button
-                  onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
-                >
+                <button onClick={salvar} type='button' className='btn btn-success'>
                   Cadastrar
                 </button>
 

@@ -12,6 +12,9 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
 function CadastroCategoria() {
   const { idParam } = useParams();
   const navigate = useNavigate();
@@ -20,67 +23,65 @@ function CadastroCategoria() {
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
-  const [nomecategoria, setNomecategoria] = useState('');
+  const [nomeProduto, setNomeProduto] = useState('');
 
-  const [dados, setDados] = useState([]);
+  const [dados, setDados] = useState(null);
+  const [dadosNome, setDadosNome] = useState([]);
+
+  useEffect(() => {
+    axios.get(baseURL)
+      .then((response) => setDadosNome(response.data))
+      .catch((error) => mensagemErro('Erro ao carregar categorias.'));
+  }, [baseURL]);
 
   function inicializar() {
-    if (idParam == null) {
+    if (!idParam) {
       setId('');
       setNome('');
-      setNomecategoria('');
-    } else {
+      setNomeProduto('');
+    } else if (dados) {
       setId(dados.id);
       setNome(dados.nome);
-      setNomecategoria(dados.nomecategoria);
+      setNomeProduto(dados.nomeProduto);
     }
   }
 
   async function salvar() {
-    let data = { id, nome, nomecategoria };
-    data = JSON.stringify(data);
+    const data = JSON.stringify({ id, nome, nomeProduto });
 
-    if (idParam == null) {
-      await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Categoria ${nome} cadastrada com sucesso!`);
-          navigate(`/listagem-categoria`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
-        });
-    } else {
-      await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-        .then(function (response) {
-          mensagemSucesso(`Categoria ${nome} alterada com sucesso!`);
-          navigate(`/listagem-categoria`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
-        });
+    try {
+      if (!idParam) {
+        await axios.post(baseURL, data, { headers: { 'Content-Type': 'application/json' } });
+        mensagemSucesso(`Categoria ${nome} cadastrada com sucesso!`);
+      } else {
+        await axios.put(`${baseURL}/${idParam}`, data, { headers: { 'Content-Type': 'application/json' } });
+        mensagemSucesso(`Categoria ${nome} alterada com sucesso!`);
+      }
+      navigate('/listagem-categoria');
+    } catch (error) {
+      mensagemErro(error.response?.data || 'Erro ao salvar categoria.');
     }
   }
 
-  async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
-    });
-    setId(dados.id);
-    setNome(dados.nome);
-    setNomecategoria(dados.nomecategoria);
-  }
-
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+    async function buscar() {
+      if (idParam) {
+        try {
+          const response = await axios.get(`${baseURL}/${idParam}`);
+          const d = response.data;
+          setDados(d);
+          setId(d.id);
+          setNome(d.nome);
+          setNomeProduto(d.nomeProduto);
+        } catch {
+          mensagemErro('Erro ao buscar categoria.');
+        }
+      }
+    }
+    buscar();
+  }, [idParam, baseURL]);
 
-  if (!dados) return null;
+  if (!dadosNome) return null;
 
   return (
     <div className='container'>
@@ -88,46 +89,44 @@ function CadastroCategoria() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome da Categoria: *' htmlFor='inputNome'>
-                <input
-                  type='text'
-                  id='inputNome'
-                  value={nome}
-                  className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
+
+              <FormGroup label='Nome da Categoria: *' htmlFor='comboNome'>
+                <Autocomplete
+                  id='comboNome'
+                  options={dadosNome}
+                  value={dadosNome.find((d) => d.nome === nome) || null}
+                  getOptionLabel={(option) => option.nome}
+                  onChange={(event, newValue) => setNome(newValue ? newValue.nome : '')}
+                  renderInput={(params) => (
+                    <TextField {...params} 
+                     variant='outlined' 
+                     size='small'
+                     placeholder='Selecione...' />
+                  )}
                 />
               </FormGroup>
 
-              <FormGroup label='Nome do Produto: *' htmlFor='inputNomeCategoria'>
+              <FormGroup label='Nome do Produto: *' htmlFor='inputNomeProduto'>
                 <input
                   type='text'
-                  id='inputNomeCategoria'
-                  value={nomecategoria}
+                  id='inputNomeProduto'
+                  value={nomeProduto}
                   className='form-control'
-                  name='nomecategoria'
-                  onChange={(e) => setNomecategoria(e.target.value)}
+                  onChange={(e) => setNomeProduto(e.target.value)}
                 />
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>
-                <button
-                  onClick={salvar}
-                  type='button'
-                  className='btn btn-success'
-                >
+                <button onClick={salvar} type='button' className='btn btn-success'>
                   Cadastrar
                 </button>
 
                 <button
                   onClick={() => {
-                    if (!nome && !nomecategoria) {
+                    if (!nome && !nomeProduto) {
                       navigate(-1);
                     } else {
-                      const confirmar = window.confirm(
-                        'Deseja realmente cancelar e sair da página? As alterações não salvas serão perdidas.'
-                      );
-                      if (confirmar) {
+                      if (window.confirm('Deseja realmente cancelar e sair da página? As alterações não salvas serão perdidas.')) {
                         navigate(-1);
                       } else {
                         inicializar();
@@ -140,6 +139,7 @@ function CadastroCategoria() {
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>
