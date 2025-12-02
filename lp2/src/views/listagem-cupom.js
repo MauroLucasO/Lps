@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-const baseURL = `${BASE_URL}-1/cupom`;
+const baseURL = `${BASE_URL}-1/cupons`;
 
 function ListagemCupom() {
   const navigate = useNavigate();

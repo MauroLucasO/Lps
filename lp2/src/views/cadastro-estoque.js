@@ -17,7 +17,7 @@ function CadastroEstoque() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/estoque`;
+  const baseURL = `${BASE_URL}-2/estoques`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

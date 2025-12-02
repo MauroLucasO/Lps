@@ -81,7 +81,6 @@ function Navbar(props) {
             />  
           </ul>*/
         }
-        
            <ul className='navbar-nav'>
             <NavbarItem
               render='true'
@@ -89,8 +88,22 @@ function Navbar(props) {
               label='Categoria'
             />
           </ul>
+           <ul className='navbar-nav'>
+            <NavbarItem
+              render='true'
+              href='/relatorio'
+              label='Relatorio'
+            />  
+          </ul>
         </div>
       </div>
+      <ul className='navbar-nav'>
+            <NavbarItem
+              render='true'
+              href='/login'
+              label='Login'
+            />
+          </ul>
     </div>
   );
 }

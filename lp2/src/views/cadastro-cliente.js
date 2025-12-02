@@ -17,7 +17,7 @@ function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/cliente`;
+  const baseURL = `${BASE_URL}-1/clientes`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

@@ -17,7 +17,7 @@ function CadastroItemPedido() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/itempedido`;
+  const baseURL = `${BASE_URL}-2/itempedidos`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

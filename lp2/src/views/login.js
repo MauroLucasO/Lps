@@ -16,7 +16,7 @@ class Login extends React.Component {
   };
 
   logar = () => {
-    mensagemSucesso(`Usuário ${this.state.login} logado com sucesso!`);
+    mensagemSucesso(`Cliente ${this.state.login} logado com sucesso!`);
   };
 
   cancelar = () => {
@@ -39,7 +39,7 @@ class Login extends React.Component {
                     id='inputLogin'
                     value={this.state.login}
                     className='form-control'
-                    name='login'
+                    name=''
                     onChange={(e) => this.setState({ login: e.target.value })}
                   />
                 </FormGroup>

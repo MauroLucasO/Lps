@@ -20,6 +20,8 @@ import CadastroItemPedido from './views/cadastro-itemPedido';
 import CadastroEstoque from './views/cadastro-estoque';
 import CadastroProduto from './views/cadastro-produto';
 
+import Relatorio from './views/relatorio';
+
 import Login from './views/login'
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
@@ -111,8 +113,11 @@ function Rotas(props) {
           path='/listagem-categoria/'
           element={<ListagemCategoria/>}
         />
-        </Routes>
-        
+        <Route
+          path='/relatorio/'
+          element={<Relatorio/>}
+        />
+        </Routes>      
     </BrowserRouter>
   );
 }

@@ -19,7 +19,7 @@ function CadastroProduto() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/produto`;
+  const baseURL = `${BASE_URL}-2/produtos`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

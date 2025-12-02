@@ -19,7 +19,7 @@ function CadastroCategoria() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/categoria`;
+  const baseURL = `${BASE_URL}-2/categorias`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

@@ -17,7 +17,7 @@ function CadastroProprietario() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/proprietario`;
+  const baseURL = `${BASE_URL}-1/proprietarios`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');

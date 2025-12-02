@@ -17,7 +17,7 @@ function CadastroGerente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/gerente`;
+  const baseURL = `${BASE_URL}-1/gerentes`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
