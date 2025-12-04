@@ -72,10 +72,8 @@ function Rotas(props) {
           element={<CadastroEstoque/>}
         />
 
-        <Route
-          path='/cadastro-produto/:idParam?'
-          element={<CadastroProduto/>}
-        />
+       <Route path="/cadastro-produto/:idParam?"
+        element={<CadastroProduto />} />
 
         <Route
           path='/listagem-cliente/'

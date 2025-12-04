@@ -127,11 +127,6 @@ function Relatorio() {
     datasets: datasetsBar,
   };
 
-  function formatarData(data) {
-    const dt = data.substr(0, 10).split('-');
-    return `${dt[2]}/${dt[1]}/${dt[0]}`;
-  }
-
   return (
     <div className='container'>
       <Card title='Acompanhamento de Pedidos'>
@@ -169,12 +164,12 @@ function Relatorio() {
             </div>
 
             <table className='table table-hover mt-4'>
+              
               <thead>
                 <tr>
                   <th>Produto</th>
                   <th>Categoria</th>
-                  <th>Data</th>
-                  <th>Status</th>
+                  <th>Descricao</th>
                   <th>Valor</th>
                 </tr>
               </thead>
@@ -184,7 +179,6 @@ function Relatorio() {
                   <tr key={p.id}>
                     <td>{p.produto}</td>
                     <td>{p.nomeCategoria}</td>
-                    <td>{formatarData(p.data)}</td>
                     <td>{p.status}</td>
                     <td>R$ {p.valor.toFixed(2)}</td>
                   </tr>

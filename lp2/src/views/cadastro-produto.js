@@ -87,11 +87,11 @@ function CadastroProduto() {
   }, [idParam, baseURL]);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}-2/categoria`).then((response) => {
+    axios.get(`${BASE_URL}-2/categorias`).then((response) => {
       setDadosCategoria(response.data);
     });
 
-    axios.get(`${BASE_URL}-2/produto`).then((response) => {
+    axios.get(`${BASE_URL}-2/produtos`).then((response) => {
       setDadosProduto(response.data);
     });
   }, []);
