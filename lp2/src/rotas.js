@@ -30,19 +30,19 @@ function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<Login />} 
+        <Route path='/login' element={<Login />}
         />
-         <Route
+        <Route
           path='/cadastro-cliente/:idParam?'
           element={<CadastroCliente />}
         />
-    
+
         <Route
           path='/cadastro-gerente/:idParam?'
           element={<CadastroGerente />}
         />
-        
-         <Route
+
+        <Route
           path='/cadastro-proprietario/:idParam?'
           element={<CadastroProprietario />}
         />
@@ -57,7 +57,7 @@ function Rotas(props) {
           element={<CadastroCupom />}
         />
 
-         <Route
+        <Route
           path='/cadastro-categoria/:idParam?'
           element={<CadastroCategoria />}
         />
@@ -69,53 +69,53 @@ function Rotas(props) {
 
         <Route
           path='/cadastro-estoque/:idParam?'
-          element={<CadastroEstoque/>}
+          element={<CadastroEstoque />}
         />
 
-       <Route path="/cadastro-produto/:idParam?"
-        element={<CadastroProduto />} />
+        <Route path="/cadastro-produto/:idParam?"
+          element={<CadastroProduto />} />
 
         <Route
           path='/listagem-cliente/'
-          element={<ListagemCliente/>}
+          element={<ListagemCliente />}
         />
         <Route
           path='/listagem-gerente/'
-          element={<ListagemGerente/>}
+          element={<ListagemGerente />}
         />
         <Route
           path='/listagem-proprietario/'
-          element={<ListagemProprietario/>}
+          element={<ListagemProprietario />}
         />
         <Route
           path='/listagem-estabelecimento/'
-          element={<ListagemEstabelecimento/>}
+          element={<ListagemEstabelecimento />}
         />
-         <Route
+        <Route
           path='/listagem-cupom/'
-          element={<ListagemCupom/>}
+          element={<ListagemCupom />}
         />
         <Route
           path='/listagem-produto/'
-          element={<ListagemProduto/>}
+          element={<ListagemProduto />}
         />
         <Route
           path='/listagem-estoque/'
-          element={<ListagemEstoque/>}
+          element={<ListagemEstoque />}
         />
         <Route
           path='/listagem-itemPedido/'
-          element={<ListagemItemPedido/>}
+          element={<ListagemItemPedido />}
         />
         <Route
           path='/listagem-categoria/'
-          element={<ListagemCategoria/>}
+          element={<ListagemCategoria />}
         />
         <Route
           path='/relatorio/'
-          element={<Relatorio/>}
+          element={<Relatorio />}
         />
-        </Routes>      
+      </Routes>
     </BrowserRouter>
   );
 }

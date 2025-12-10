@@ -6,7 +6,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
 import { IconButton } from '@mui/material';
@@ -52,11 +52,24 @@ function ListagemProduto() {
       });
   }
 
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const categoria = queryParams.get('categoria');
+
   React.useEffect(() => {
     axios.get(baseURL).then((response) => {
-      setDados(response.data);
+      if (categoria) {
+        const filteredData = response.data.filter(
+          (item) =>
+            item.nomeCategoria &&
+            item.nomeCategoria.toLowerCase() === categoria.toLowerCase()
+        );
+        setDados(filteredData);
+      } else {
+        setDados(response.data);
+      }
     });
-  }, []);
+  }, [categoria]);
 
 
   if (!dados) return null;
@@ -77,7 +90,7 @@ function ListagemProduto() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>id</th>             
+                    <th scope='col'>id</th>
                     <th scope='col'>nome</th>
                     <th scope='col'>valor</th>
                     <th scope='col'>descrição</th>

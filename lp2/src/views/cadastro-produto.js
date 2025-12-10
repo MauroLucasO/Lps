@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import Stack from '@mui/material/Stack';
+import Card from '../components/card';
+import FormGroup from '../components/form-group';
 
 import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';import Stack from '@mui/material/Stack';
-import Card from '../components/card';
-import FormGroup from '../components/form-group';
+import axios from 'axios';
 import { BASE_URL } from '../config/axios';
-
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
 
 function CadastroProduto() {
   const { idParam } = useParams();
@@ -26,11 +25,9 @@ function CadastroProduto() {
   const [idCategoria, setIdCategoria] = useState(0);
 
   const [dados, setDados] = useState([]);
-  const [dadosCategoria, setDadosCategoria] = useState(null);
-  const [dadosProduto, setDadosProduto] = useState(null);
 
-  const inicializar = () => {
-    if (!idParam) {
+  function inicializar() {
+    if (idParam == null) {
       setId('');
       setNome('');
       setValor('');
@@ -41,70 +38,66 @@ function CadastroProduto() {
       setNome(dados.nome);
       setValor(dados.valor);
       setDescricao(dados.descricao);
-      setIdCategoria(dados.idCategoria);
+      setIdCategoria(dados.idCategoria)
     }
-  };
+  }
 
-  const salvar = async () => {
+  async function salvar() {
     let data = { id, nome, valor, descricao, idCategoria };
     data = JSON.stringify(data);
 
-    try {
-      if (!idParam) {
-        await axios.post(baseURL, data, {
+    if (idParam == null) {
+      await axios
+        .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
+        })
+        .then(function (response) {
+          mensagemSucesso(`Produto ${nome} cadastrado com sucesso!`);
+          navigate(`/listagem-produto`);
+        })
+        .catch(function (error) {
+          mensagemErro(error.response.data);
         });
-        mensagemSucesso(`Produto ${nome} cadastrado com sucesso!`);
-      } else {
-        await axios.put(`${baseURL}/${idParam}`, data, {
+    } else {
+      await axios
+        .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
+        })
+        .then(function (response) {
+          mensagemSucesso(`Produto ${nome} alterado com sucesso!`);
+          navigate(`/listagem-produto`);
+        })
+        .catch(function (error) {
+          mensagemErro(error.response.data);
         });
-        mensagemSucesso(`Produto ${nome} alterado com sucesso!`);
-      }
-      navigate(`/listagem-produto`);
-    } catch (error) {
-      mensagemErro(error.response?.data || 'Erro ao salvar produto');
     }
-  };
+  }
 
-  const buscar = useCallback(async () => {
-    if (idParam) {
-      try {
-        const response = await axios.get(`${baseURL}/${idParam}`);
-        const d = response.data;
-        setDados(d);
-        setId(d.id);
-        setNome(d.nome);
-        setValor(d.valor);
-        setDescricao(d.descricao);
-        setIdCategoria(d.idCategoria);
-      } catch (error) {
-        mensagemErro('Erro ao buscar produto');
-      }
-    }
-  }, [idParam, baseURL]);
+  async function buscar() {
+    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+      setDados(response.data);
+    });
+    setId(dados.id);
+    setNome(dados.nome);
+    setValor(dados.valor);
+    setDescricao(dados.descricao);
+    setIdCategoria(dados.idCategoria)
+  }
+
+  const [dadosCategoria, setDadosCategoria] = React.useState(null);
 
   useEffect(() => {
     axios.get(`${BASE_URL}-2/categorias`).then((response) => {
       setDadosCategoria(response.data);
     });
-
-    axios.get(`${BASE_URL}-2/produtos`).then((response) => {
-      setDadosProduto(response.data);
-    });
   }, []);
 
   useEffect(() => {
-    buscar();
-  }, [buscar]);
+    buscar(); // eslint-disable-next-line
+  }, [id]);
 
-  if (!dadosCategoria || !dadosProduto) return null;
-
-  const categoriaSelecionada =
-    dadosCategoria.find((c) => c.id === idCategoria) || null;
-
-  const produtoSelecionado =
-    dadosProduto.find((p) => p.nome === nome) || null;
+  if (!dados) return null;
+  if (!dadosCategoria) return null;
 
   return (
     <div className='container'>
@@ -112,24 +105,14 @@ function CadastroProduto() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-
-              <FormGroup label='Nome do Produto: *' htmlFor='comboNome'>
-                <Autocomplete
-                  id='comboNome'
-                  options={dadosProduto}
-                  value={produtoSelecionado}
-                  getOptionLabel={(option) => option.nome}
-                  onChange={(event, newValue) => {
-                    setNome(newValue ? newValue.nome : '');
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder='Selecione o produto...'
-                      variant='outlined'
-                      size='small'
-                    />
-                  )}
+              <FormGroup label='Nome do Produto: *' htmlFor='inputNome'>
+                <input
+                  type='text'
+                  id='inputNome'
+                  value={nome}
+                  className='form-control'
+                  name='nome'
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
 
@@ -144,7 +127,7 @@ function CadastroProduto() {
                 />
               </FormGroup>
 
-              <FormGroup label='Descrição do Produto: *' htmlFor='inputDescricao'>
+              <FormGroup label='Descrição do Produto: *' htmlFor='inputValor'>
                 <input
                   type='text'
                   id='inputDescricao'
@@ -155,28 +138,31 @@ function CadastroProduto() {
                 />
               </FormGroup>
 
-              <FormGroup label='Categoria:' htmlFor='comboCategoria'>
-                <Autocomplete
-                  id='comboCategoria'
-                  options={dadosCategoria}
-                  value={categoriaSelecionada}
-                  getOptionLabel={(option) => option.nome}
-                  onChange={(event, newValue) => {
-                    setIdCategoria(newValue ? newValue.id : 0);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder='Selecione...'
-                      variant='outlined'
-                      size='small'
-                    />
-                  )}
-                />
+              <FormGroup label='Categoria:' htmlFor='selectCategoria'>
+                <select
+                  className='form-select'
+                  id='selectCategoria'
+                  name='idCategoria'
+                  value={idCategoria}
+                  onChange={(e) => setIdCategoria(e.target.value)}
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosCategoria.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nome}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>
-                <button onClick={salvar} type='button' className='btn btn-success'>
+                <button
+                  onClick={salvar}
+                  type='button'
+                  className='btn btn-success'
+                >
                   Cadastrar
                 </button>
 
@@ -201,7 +187,6 @@ function CadastroProduto() {
                   Cancelar
                 </button>
               </Stack>
-
             </div>
           </div>
         </div>
