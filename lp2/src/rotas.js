@@ -23,6 +23,7 @@ import CadastroProduto from './views/cadastro-produto';
 import Relatorio from './views/relatorio';
 
 import Login from './views/login'
+import Home from './views/pagina-inicial';
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
@@ -30,6 +31,9 @@ function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
+
+      <Route path='/' element={<Home />} />
+
         <Route path='/login' element={<Login />}
         />
         <Route
