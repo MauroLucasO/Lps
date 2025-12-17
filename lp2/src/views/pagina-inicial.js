@@ -3,63 +3,23 @@ import Imagem from "../assets/imagem/Sistema De Lanchonete.png";
 
 export default function Home() {
     return (
-        <div className="container mt-4">
-
-            <div className="card mb-4">
-                <h3
-                    className="card-header text-center"
-                    style={{ backgroundColor: "#2C3E50", color: "white" }}
-                >
-                    Sistema de Lanchonete
-                </h3>
-
-                <div className="card-body">
-                    <h5 className="card-title text-center">logo:</h5>
-                </div>
-
-                <div className="text-center p-3">
-                    <img 
-                        src={Imagem}
-                        alt="Imagem"
-                        className="img-fluid rounded"
-                        style={{ maxHeight: "200px", objectFit: "cover" }}
-                    />
+        <div className="container d-flex flex-column" style={{ minHeight: '90vh', paddingTop: '80px' }}>
+            <div className="row flex-grow-1 mt-5">
+                <div className="col-lg-8 offset-lg-1 text-start">
+                    <h1 className="display-4 fw-bold mb-2" style={{ color: '#2C3E50' }}>
+                        Sistema de Lanchonete
+                    </h1>
+                    <p className="lead fs-4" style={{ fontWeight: '300', lineHeight: '1.4' }}>
+                        Gerencie pedidos, produtos e clientes com eficiência.
+                        Uma solução moderna para agilizar o seu atendimento e controle.
+                    </p>
                 </div>
             </div>
 
-            <div className="row justify-content-center">
-
-                <div className="col-md-6 mb-3">
-                    <div className="card h-100">
-                        <div 
-                            className="card-header text-center"
-                            style={{ backgroundColor: "#2C3E50", color: "white" }}
-                        >
-                            Membros:
-                        </div>
-                        <div className="card-body text-center">
-                            <h4 className="card-title">Luan</h4>
-                            <p className="card-text">Sistema de Informação</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-md-6 mb-3">
-                    <div className="card h-100">
-                        <div 
-                            className="card-header text-center"
-                            style={{ backgroundColor: "#2C3E50", color: "white" }}
-                        >
-                            Membros:
-                        </div>
-                        <div className="card-body text-center">
-                            <h4 className="card-title">Mauro</h4>
-                            <p className="card-text">Sistema de Informação</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            <footer className="text-center mt-auto p-4" style={{ backgroundColor: "#f5f5f5", fontSize: "12px", color: "#999" }}>
+                <p className="mb-0">Copyright © 2025 Luan e Mauro. Todos os direitos reservados.</p>
+                <p className="mb-0">Sistema de Informação - Desenvolvido para a disciplina de Linguagem de Programação 2.</p>
+            </footer>
 
         </div>
     );

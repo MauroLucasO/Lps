@@ -18,7 +18,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import '../custom.css';
 
 import axios from 'axios';
-import { BASE_URL} from '../config/axios';
+import { BASE_URL } from '../config/axios';
 
 ChartJS.register(
   ArcElement,
@@ -48,6 +48,8 @@ function Relatorio() {
   const [idCliente, setIdCliente] = useState(0);
   const [clientes, setClientes] = useState([]);
   const [dadosPedidos, setDadosPedidos] = useState([]);
+  const [idItem, setIdItem] = useState(0);
+  const [idEstabelecimento, setIdEstabelecimento] = useState(0);
 
   useEffect(() => {
     axios.get(`${BASE_URL}/clientes`)
@@ -57,17 +59,82 @@ function Relatorio() {
 
   useEffect(() => {
     if (idCliente !== 0) {
-      axios.get(`${BASE_URL}/clientes/${idCliente}/pedidos`)
-        .then((res) => setDadosPedidos(res.data))
+      axios.get(`${BASE_URL}-2/pedido?idCliente=${idCliente}`)
+        .then(async (res) => {
+          const rawData = Array.isArray(res.data) ? res.data : [];
+
+          const enrichedData = await Promise.all(
+            rawData.map(async (item) => {
+              let produtoNome = 'Sem Nome';
+              let categoriaNome = 'Sem Categoria';
+              let produtoDescricao = '';
+              let itemDetails = {};
+
+              if (item.idItemPedido) {
+                try {
+                  const itemRes = await axios.get(
+                    `${BASE_URL}-2/itemPedidos/${item.idItemPedido}`
+                  );
+                  itemDetails = itemRes.data;
+
+                  if (itemDetails.idProduto) {
+                    try {
+                      const prodRes = await axios.get(
+                        `${BASE_URL}-2/produtos/${itemDetails.idProduto}`
+                      );
+                      produtoNome = prodRes.data.nome || 'Sem Nome';
+                      categoriaNome = prodRes.data.nomeCategoria || 'Sem Categoria';
+                      produtoDescricao = prodRes.data.descricao || '';
+                    } catch (prodErr) {
+                      console.error(`Erro ao buscar produto ${itemDetails.idProduto}`, prodErr);
+                    }
+                  }
+                } catch (error) {
+                  console.error(
+                    `Erro ao buscar detalhes do item ${item.idItemPedido}`,
+                    error
+                  );
+                }
+              }
+
+              return {
+                ...item,
+                ...itemDetails,
+                idCategoria: item.idCategoria || 0,
+                nomeCategoria: categoriaNome,
+                valor: itemDetails.valorTotal ? String(itemDetails.valorTotal) : '0',
+                quantidade: itemDetails.quantidade || 0,
+                status: 'CONCLUIDO',
+                descricao: produtoDescricao,
+                produto: produtoNome,
+              };
+            })
+          );
+
+          setDadosPedidos(enrichedData);
+        })
+        .catch((err) => {
+          console.log(err);
+          setDadosPedidos([]);
+        });
+
+      axios.get(`${BASE_URL}-2/pedido?idCliente=${idCliente}`)
+        .then((res) => setIdItem(res.data))
+        .catch((err) => console.log(err));
+
+      axios.get(`${BASE_URL}-2/pedido?idCliente=${idCliente}`)
+        .then((res) => setIdEstabelecimento(res.data))
         .catch((err) => console.log(err));
     } else {
       setDadosPedidos([]);
+      setIdItem(0);
+      setIdEstabelecimento(0);
     }
   }, [idCliente]);
 
   useEffect(() => {
     if (idCliente !== 0) {
-      axios.get(`${BASE_URL}-3/relatorio`)
+      axios.get(`${BASE_URL}-3/relatorios`)
         .catch((err) => console.log(err));
     }
   }, [idCliente]);
@@ -164,23 +231,23 @@ function Relatorio() {
             </div>
 
             <table className='table table-hover mt-4'>
-              
+
               <thead>
                 <tr>
                   <th>Produto</th>
-                  <th>Categoria</th>
+                  <th>Quantidade</th>
                   <th>Descricao</th>
                   <th>Valor</th>
                 </tr>
               </thead>
 
               <tbody>
-                {dadosPedidos.map(p => (
+                {dadosPedidos.map((p) => (
                   <tr key={p.id}>
                     <td>{p.produto}</td>
-                    <td>{p.nomeCategoria}</td>
-                    <td>{p.status}</td>
-                    <td>R$ {p.valor.toFixed(2)}</td>
+                    <td>{p.quantidade}</td>
+                    <td>{p.descricao}</td>
+                    <td>{p.valor}</td>
                   </tr>
                 ))}
               </tbody>
@@ -188,8 +255,8 @@ function Relatorio() {
 
           </div>
         </div>
-      </Card>
-    </div>
+      </Card >
+    </div >
   );
 }
 

@@ -118,7 +118,7 @@ function Navbar(props) {
           </ul>
         </div>
       </div>
-      <ul className='navbar-nav'>
+      <ul className='navbar-nav' style={{ marginRight: '30px' }}>
         <NavbarItem
           render='true'
           href='/login'
