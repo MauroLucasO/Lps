@@ -1,5 +1,4 @@
 import "bootswatch/dist/flatly/bootstrap.css";
-import Imagem from "../assets/imagem/Sistema De Lanchonete.png";
 
 export default function Home() {
     return (

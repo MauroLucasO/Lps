@@ -236,15 +236,9 @@ function CadastroCliente() {
                     if (!nome && !cpf && !senha && !senhaRepeticao && !cidade && !estado && !cep && !logradouro && !email && !telefone) {
                      navigate(-1);
                     } else {
-                      const confirmar = window.confirm(
-                        'Deseja realmente cancelar e sair da página? As alterações não salvas serão perdidas.'
-                      );
-                      if (confirmar) {
                         navigate(-1);
-                      } else {
                         inicializar();
                       }
-                    }
                   }}
                   type='button'
                   className='btn btn-danger'

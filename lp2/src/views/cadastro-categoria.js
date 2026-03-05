@@ -122,22 +122,21 @@ function CadastroCategoria() {
                 </button>
 
                 <button
+
                   onClick={() => {
-                    if (!nome && !nomeProduto) {
-                      navigate(-1);
-                    } else {
-                      if (window.confirm('Deseja realmente cancelar e sair da página? As alterações não salvas serão perdidas.')) {
-                        navigate(-1);
-                      } else {
-                        inicializar();
-                      }
-                    }
-                  }}
-                  type='button'
-                  className='btn btn-danger'
-                >
-                  Cancelar
-                </button>
+                  if (!nome && !nomeProduto) {
+                    navigate(-1);
+                  } else {
+                    inicializar();
+                    navigate(-1);
+                  }
+                }}
+                type='button'
+                className='btn btn-danger'
+              >
+                Cancelar
+              </button>
+
               </Stack>
 
             </div>
