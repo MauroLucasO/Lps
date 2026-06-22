@@ -10,6 +10,15 @@ import {
 } from 'reactstrap';
 
 function Navbar(props) {
+  // 👇 1. Verifica se existe um token salvo no navegador
+  const isLogado = localStorage.getItem('meu_token') !== null;
+
+  // 👇 2. Função para apagar o token e voltar para o login
+  const desconectar = () => {
+    localStorage.removeItem('meu_token');
+    window.location.href = '/login';
+  };
+
   return (
     <div className='navbar navbar-expand-lg fixed-top navbar-dark bg-primary'>
       <div className='container'>
@@ -88,42 +97,32 @@ function Navbar(props) {
           <ul className='navbar-nav'>
             <NavbarItem
               render='true'
-              href='/listagem-estoque'
-              label='Estoque'
-            />
-          </ul>
-
-          {/*
-           <ul className='navbar-nav'>
-            <NavbarItem
-              render='true'
-              href='/listagem-itemPedido'
-              label='ItemPedido'
-            />  
-          </ul>*/
-          }
-          <ul className='navbar-nav'>
-            <NavbarItem
-              render='true'
               href='/listagem-categoria'
               label='Categoria'
             />
           </ul>
-          <ul className='navbar-nav'>
-            <NavbarItem
-              render='true'
-              href='/relatorio'
-              label='Relatorio'
-            />
-          </ul>
         </div>
       </div>
+      
+      {/* 👇 3. Aqui acontece a mágica da troca de botões! */}
       <ul className='navbar-nav' style={{ marginRight: '30px' }}>
-        <NavbarItem
-          render='true'
-          href='/login'
-          label='Login'
-        />
+        {isLogado ? (
+          <li className="nav-item d-flex align-items-center">
+            <button 
+              onClick={desconectar} 
+              className="btn btn-danger btn-sm" 
+              style={{ cursor: 'pointer' }}
+            >
+              Desconectar
+            </button>
+          </li>
+        ) : (
+          <NavbarItem
+            render='true'
+            href='/login'
+            label='Login'
+          />
+        )}
       </ul>
     </div>
   );

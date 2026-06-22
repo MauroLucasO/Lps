@@ -10,14 +10,13 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
 function CadastroCliente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/clientes`;
+  const baseURL = `/clientes`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
@@ -65,7 +64,7 @@ function CadastroCliente() {
     let data = { id, nome, cpf, telefone, cep, cidade, estado, logradouro, email, senha, senhaRepeticao };
     data = JSON.stringify(data);
     if (idParam == null) {
-      await axios
+      await api
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
@@ -77,7 +76,7 @@ function CadastroCliente() {
           mensagemErro(error.response.data);
         });
     } else {
-      await axios
+      await api
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
@@ -92,7 +91,7 @@ function CadastroCliente() {
   }
 
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+    await api.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
       setId(dados.id);

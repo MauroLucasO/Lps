@@ -12,14 +12,11 @@ import '../custom.css';
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
 
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-
 function CadastroCategoria() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/categorias`;
+  const baseURL = `${BASE_URL}/categorias`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
@@ -42,7 +39,6 @@ function CadastroCategoria() {
     } else if (dados) {
       setId(dados.id);
       setNome(dados.nome);
-      setNomeProduto(dados.nomeProduto);
     }
   }
 
@@ -72,7 +68,6 @@ function CadastroCategoria() {
           setDados(d);
           setId(d.id);
           setNome(d.nome);
-          setNomeProduto(d.nomeProduto);
         } catch {
           mensagemErro('Erro ao buscar categoria.');
         }
@@ -90,29 +85,13 @@ function CadastroCategoria() {
           <div className='col-lg-12'>
             <div className='bs-component'>
 
-              <FormGroup label='Nome da Categoria: *' htmlFor='comboNome'>
-                <Autocomplete
-                  id='comboNome'
-                  options={dadosNome}
-                  value={dadosNome.find((d) => d.nome === nome) || null}
-                  getOptionLabel={(option) => option.nome}
-                  onChange={(event, newValue) => setNome(newValue ? newValue.nome : '')}
-                  renderInput={(params) => (
-                    <TextField {...params} 
-                     variant='outlined' 
-                     size='small'
-                     placeholder='Selecione...' />
-                  )}
-                />
-              </FormGroup>
-
-              <FormGroup label='Nome do Produto: *' htmlFor='inputNomeProduto'>
+              <FormGroup label='Nome da Categoria: *' htmlFor='inputNomeCategoria'>
                 <input
                   type='text'
-                  id='inputNomeProduto'
-                  value={nomeProduto}
+                  id='inputNomeCategoria'
+                  value={nome}
                   className='form-control'
-                  onChange={(e) => setNomeProduto(e.target.value)}
+                  onChange={(e) => setNome(e.target.value)}
                 />
               </FormGroup>
 
@@ -124,7 +103,7 @@ function CadastroCategoria() {
                 <button
 
                   onClick={() => {
-                  if (!nome && !nomeProduto) {
+                  if (!nome) {
                     navigate(-1);
                   } else {
                     inicializar();

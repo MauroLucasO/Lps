@@ -16,7 +16,7 @@ function CadastroProduto() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/produtos`;
+  const baseURL = `${BASE_URL}/produtos`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
@@ -87,7 +87,7 @@ function CadastroProduto() {
   const [dadosCategoria, setDadosCategoria] = React.useState(null);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}-2/categorias`).then((response) => {
+    axios.get(`${BASE_URL}/categorias`).then((response) => {
       setDadosCategoria(response.data);
     });
   }, []);
@@ -147,7 +147,7 @@ function CadastroProduto() {
                   onChange={(e) => setIdCategoria(e.target.value)}
                 >
                   <option key='0' value='0'>
-                    {' '}
+                  <option value=''>Selecione um produto</option>
                   </option>
                   {dadosCategoria.map((dado) => (
                     <option key={dado.id} value={dado.id}>

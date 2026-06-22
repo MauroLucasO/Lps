@@ -5,6 +5,8 @@ import Stack from '@mui/material/Stack';
 
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
@@ -17,9 +19,11 @@ function CadastroProprietario() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/proprietarios`;
+  const baseURL = `${BASE_URL}/propretarios`;
+  const estabelecimentosURL = `${BASE_URL}/estabelecimentos`;
 
   const [id, setId] = useState('');
+  const [estabelecimento_id, setEstabelecimento] = useState('');
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [telefone, setTelefone] = useState('');
@@ -32,10 +36,13 @@ function CadastroProprietario() {
   const [senhaRepeticao, setSenhaRepeticao] = useState('');
 
   const [dados, setDados] = useState([]);
+  const [listaEstabelecimentos, setListaEstabelecimentos] = useState([]);
+  const [estabelecimentoSelecionado, setEstabelecimentoSelecionado] = useState(null);
 
   function inicializar() {
     if (idParam == null) {
       setId('');
+      setEstabelecimento('');
       setNome('');
       setCpf('');
       setTelefone('');
@@ -48,6 +55,7 @@ function CadastroProprietario() {
       setSenhaRepeticao('');
     } else {
       setId(dados.id);
+      setEstabelecimento(dados.estabelecimento_id);
       setNome(dados.nome);
       setCpf(dados.cpf);
       setTelefone(dados.telefone);
@@ -59,19 +67,28 @@ function CadastroProprietario() {
       setSenha('');
       setSenhaRepeticao('');
     }
+
+    if (dados.id_estabelecimento) {
+        setEstabelecimentoSelecionado(dados.id_estabelecimento);
+      }
   }
 
   async function salvar() {
-    let data = { id, nome, cpf, telefone, cep, cidade, estado, logradouro, email, senha, senhaRepeticao };
+    const idDoEstabelecimento = estabelecimentoSelecionado && typeof estabelecimentoSelecionado === 'object'
+    ? estabelecimentoSelecionado.id
+    : estabelecimentoSelecionado;
+
+    let data = { id, idEstabelecimento: idDoEstabelecimento, nome, cpf, telefone, cep, cidade, estado, logradouro, email, senha, senhaRepeticao };
     data = JSON.stringify(data);
+
     if (idParam == null) {
       await axios
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Proprietário ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-proprietario`);
+          mensagemSucesso(`Proprietario ${nome} cadastrado com sucesso!`);
+          navigate(`/listagem-propretarios`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -82,8 +99,8 @@ function CadastroProprietario() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Proprietário ${nome} alterado com sucesso!`);
-          navigate(`/listagem-proprietario`);
+          mensagemSucesso(`Proprietario ${nome} alterado com sucesso!`);
+          navigate(`/listagem-propretarios`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -91,7 +108,7 @@ function CadastroProprietario() {
     }
   }
 
-  async function buscar() {
+async function buscar() {
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
@@ -106,10 +123,23 @@ function CadastroProprietario() {
       setEmail (dados.email);
       setSenha('');
       setSenhaRepeticao('');
+
+      // CORREÇÃO AQUI: Lê a propriedade "estabelecimento" que veio do inspecionar
+      if (dados.estabelecimento) {
+        setEstabelecimentoSelecionado(dados.estabelecimento);
+      }
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
+
+    axios.get(estabelecimentosURL)
+      .then((response) => {
+        setListaEstabelecimentos(response.data);
+      })
+      .catch(() => mensagemErro("Erro ao carregar lista de estabelecimentos."));
+
+    buscar();
+    // eslint-disable-next-line
   }, [id]);
 
   if (!dados) return null;
@@ -120,6 +150,26 @@ function CadastroProprietario() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
+
+              <FormGroup label='Estabelecimento: *' htmlFor='comboEstabelecimento'>
+                <Autocomplete
+                  id='comboEstabelecimento'
+                  options={listaEstabelecimentos}
+                  value={estabelecimentoSelecionado}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  getOptionLabel={(option) => option.estabelecimento_id || option.nome || ''}
+                  onChange={(event, newValue) => setEstabelecimentoSelecionado(newValue)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant='outlined'
+                      size='small'
+                      placeholder='Selecione o estabelecimento...'
+                    />
+                  )}
+                />
+              </FormGroup>
+
               <FormGroup label='Nome: *' htmlFor='inputNome'>
                 <input
                   type='text'
@@ -173,7 +223,7 @@ function CadastroProprietario() {
                   onChange={(e) => setCidade(e.target.value)}
                 />
               </FormGroup>
-              <FormGroup label='Estado: *' htmlFor='inputEstado'>
+               <FormGroup label='Estado: *' htmlFor='inputEstado'>
                 <input
                   type='text'
                   id='inputEstado'
@@ -235,8 +285,8 @@ function CadastroProprietario() {
 
                 <button
                   onClick={() => {
-                    if (!nome && !cpf && !senha && !senhaRepeticao && !cidade && !estado && !cep && !logradouro && !email && !telefone) {
-                      navigate(-1); 
+                    if (!nome && !estabelecimento_id && !cpf && !senha && !senhaRepeticao && !cidade && !estado && !cep && !logradouro && !email && !telefone) {
+                    navigate(-1);
                     } else {
                         navigate(-1);
                         inicializar();

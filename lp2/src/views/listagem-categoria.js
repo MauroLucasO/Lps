@@ -13,10 +13,9 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
-const baseURL = `${BASE_URL}-2/categorias`;
+const baseURL = `/categorias`;
 
 function ListagemCategoria() {
   const navigate = useNavigate();
@@ -35,7 +34,7 @@ function ListagemCategoria() {
     let data = JSON.stringify({ id });
     let url = `${baseURL}/${id}`;
     console.log(url);
-    await axios
+    await api
       .delete(url, data, {
         headers: { 'Content-Type': 'application/json' },
       })
@@ -53,7 +52,7 @@ function ListagemCategoria() {
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    api.get(baseURL).then((response) => {
       setDados(response.data);
     });
   }, []);
@@ -78,7 +77,6 @@ function ListagemCategoria() {
                   <tr>
                     <th scope='col'>id</th>
                     <th scope='col'>nome</th>
-                    <th scope='col'>nomecategoria</th>             
                   </tr>
                 </thead>
                 <tbody>
@@ -86,7 +84,6 @@ function ListagemCategoria() {
                     <tr key={dado.id}>
                       <td>{dado.id}</td>
                       <td>{dado.nome}</td>
-                      <td>{dado.nomecategoria}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

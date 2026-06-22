@@ -1,11 +1,11 @@
 import React from 'react';
 
 import Stack from '@mui/material/Stack';
-
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
-
 import { mensagemSucesso } from '../components/toastr';
+
+import api from '../config/axios'; 
 
 import '../custom.css';
 
@@ -15,8 +15,30 @@ class Login extends React.Component {
     senha: '',
   };
 
-  logar = () => {
-    mensagemSucesso(`Cliente ${this.state.login} logado com sucesso!`);
+  logar = async () => {
+    const { login, senha } = this.state;
+
+    try {
+      const response = await api.post('/usuarios/auth', { login, senha });
+      
+const token = response.data.token; 
+
+      if (token) {
+        localStorage.setItem('meu_token', token);
+        
+        mensagemSucesso(`Cliente ${login} logado com sucesso!`);
+
+        window.location.href = '/';
+        
+        console.log("Agora sim! Token atualizado:", localStorage.getItem('meu_token'));
+      } else {
+        console.error("O backend respondeu com sucesso, mas não veio nenhuma propriedade 'token' no JSON. Verifique a estrutura:", response.data);
+      }
+
+    } catch (error) {
+      console.error("Erro na autenticação:", error);
+      alert('Erro ao logar. Verifique seu login e senha.');
+    }
   };
 
   cancelar = () => {
@@ -39,7 +61,7 @@ class Login extends React.Component {
                     id='inputLogin'
                     value={this.state.login}
                     className='form-control'
-                    name=''
+                    name='login'
                     onChange={(e) => this.setState({ login: e.target.value })}
                   />
                 </FormGroup>

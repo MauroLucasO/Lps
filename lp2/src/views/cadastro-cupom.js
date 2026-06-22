@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
@@ -16,7 +16,8 @@ function CadastroCupom() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-1/cupons`;
+  const baseURL = `${BASE_URL}/cupons`;
+  const baseEstabelecimentoURL = `${BASE_URL}/estabelecimentos`;
 
   const [id, setId] = useState('');
   const [desconto, setDesconto] = useState('');
@@ -24,7 +25,22 @@ function CadastroCupom() {
   const [nome, setNome] = useState('');
   const [estabelecimento, setEstabelecimento] = useState('');
 
-  const [dados, setDados] = useState([]);
+  const [dados, setDados] = useState(null);
+  const [listaEstabelecimentos, setListaEstabelecimentos] = useState([]);
+
+  const carregarEstabelecimentos = useCallback(async () => {
+    await axios.get(baseEstabelecimentoURL).then((response) => {
+      setListaEstabelecimentos(response.data);
+    });
+  }, [baseEstabelecimentoURL]);
+
+  const buscar = useCallback(async () => {
+    if (idParam != null) {
+      await axios.get(`${baseURL}/${idParam}`).then((response) => {
+        setDados(response.data);
+      });
+    }
+  }, [idParam, baseURL]);
 
   function inicializar() {
     if (idParam == null) {
@@ -33,7 +49,7 @@ function CadastroCupom() {
       setDuracao('');
       setNome('');
       setEstabelecimento('');
-    } else {
+    } else if (dados) {
       setId(dados.id);
       setDesconto(dados.desconto);
       setDuracao(dados.duracao);
@@ -71,24 +87,22 @@ function CadastroCupom() {
     }
   }
 
-  async function buscar() {
-    if (idParam != null) {
-      await axios.get(`${baseURL}/${idParam}`).then((response) => {
-        setDados(response.data);
-      });
+  useEffect(() => {
+    carregarEstabelecimentos();
+    buscar();
+  }, [carregarEstabelecimentos, buscar]);
+
+  useEffect(() => {
+    if (dados) {
       setId(dados.id);
       setDesconto(dados.desconto);
       setDuracao(dados.duracao);
       setNome(dados.nome);
       setEstabelecimento(dados.estabelecimento);
     }
-  }
+  }, [dados]);
 
-  useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
-
-  if (!dados) return null;
+  if (!dados && idParam != null) return null;
 
   return (
     <div className='container'>
@@ -130,21 +144,23 @@ function CadastroCupom() {
               </FormGroup>
 
               <FormGroup label='Estabelecimento: *' htmlFor='inputEstabelecimento'>
-                <input
-                  type='text'
+                <select
                   id='inputEstabelecimento'
                   value={estabelecimento}
                   className='form-control'
-                  name='estabelecimento'
                   onChange={(e) => setEstabelecimento(e.target.value)}
-                />
+                >
+                  <option value=''>Selecione</option>
+                  {listaEstabelecimentos.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.nome}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
 
               <Stack spacing={1} padding={1} direction='row'>
-                <button onClick={salvar} 
-                type='button' 
-                className='btn btn-success'
-                >
+                <button onClick={salvar} type='button' className='btn btn-success'>
                   Cadastrar
                 </button>
 
@@ -153,8 +169,8 @@ function CadastroCupom() {
                     if (!nome && !desconto && !duracao && !estabelecimento) {
                       navigate(-1);
                     } else {
-                        navigate(-1);
-                        inicializar();
+                      navigate(-1);
+                      inicializar();
                     }
                   }}
                   type='button'

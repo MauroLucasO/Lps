@@ -13,10 +13,10 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
-const baseURL = `${BASE_URL}-1/gerentes`;
+const baseURL = `/gerentes`;
+const estabelecimentosURL = `/estabelecimentos`;
 
 function ListagemGerente() {
   const navigate = useNavigate();
@@ -30,12 +30,13 @@ function ListagemGerente() {
   };
 
   const [dados, setDados] = React.useState(null);
+  const [dadosEstabelecimento, setdadosEstabelecimento] = React.useState([]);
 
   async function excluir(id) {
     let data = JSON.stringify({ id });
     let url = `${baseURL}/${id}`;
     console.log(url);
-    await axios
+    await api
       .delete(url, data, {
         headers: { 'Content-Type': 'application/json' },
       })
@@ -53,10 +54,43 @@ function ListagemGerente() {
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    api.get(baseURL).then((response) => {
       setDados(response.data);
     });
+    api.get(estabelecimentosURL).then((response) => {
+      setdadosEstabelecimento(response.data);
+    });
   }, []);
+
+const obterNomeEstabelecimento = (dadoGerente) => {
+  // Cenário A: O back-end já devolve o objeto do estabelecimento populado
+  if (dadoGerente.estabelecimento && typeof dadoGerente.estabelecimento === 'object') {
+    return dadoGerente.estabelecimento.nome || dadoGerente.estabelecimento.estabelecimento || '';
+  }
+  
+  // Cenário B: Se a API trouxer como string direta
+  if (dadoGerente.estabelecimento && typeof dadoGerente.estabelecimento === 'string') {
+    return dadoGerente.estabelecimento;
+  }
+
+  // Nome do estabelecimento na listagem/cadastro de gerentes/cupons
+  // Substituir o email pelo login
+  // Colocar a seleção de proprietário no cadastro de estabelecimentos (ou somente arrumar no cadastro do proprietario)
+  // Mapeie aqui todas as variações possíveis de nome que o seu Back-end pode estar enviando:
+  const idEst = 
+    dadoGerente.estabelecimento_id || 
+    dadoGerente.id_estabelecimento || 
+    dadoGerente.idEstabelecimento ||   // Comum em Java / Node (CamelCase)
+    dadoGerente.estabelecimentoId;     // Comum em C# / Prisma ORM
+
+  if (idEst && dadosEstabelecimento.length > 0) {
+    // Garantimos a comparação convertendo ambos para String para evitar problemas de tipo (Ex: "1" === 1)
+    const encontrado = dadosEstabelecimento.find((est) => String(est.id) === String(idEst));
+    return encontrado ? (encontrado.nome || encontrado.estabelecimento) : 'Não localizado';
+  }
+
+  return 'Não informado';
+};
 
   if (!dados) return null;
 
@@ -85,6 +119,7 @@ function ListagemGerente() {
                     <th scope='col'>cidade</th>
                     <th scope='col'>estado</th>
                     <th scope='col'>logradouro</th>
+                    <th scope='col'>estabelecimento</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,7 +134,8 @@ function ListagemGerente() {
                       <td>{dado.cidade}</td>
                       <td>{dado.estado}</td>
                       <td>{dado.logradouro}</td>
-                      <td>{dado.login}</td>
+                      <td>{obterNomeEstabelecimento(dado)}</td>
+
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

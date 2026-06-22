@@ -17,70 +17,88 @@ function CadastroEstoque() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}-2/estoques`;
+  const baseURL = `${BASE_URL}/estoques`;
 
   const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
   const [quantidade, setQuantidade] = useState('');
 
-  const [dados, setDados] = useState([]);
+  const [produtoId, setProdutoId] = useState('');
+  const [produtos, setProdutos] = useState([]);
+
+  const [setDados] = useState(null);
 
   function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setNome('');
-      setQuantidade('');
-    } else {
-      setId(dados.id);
-      setNome(dados.nome);
-      setQuantidade(dados.quantidade);
+    setId('');
+    setQuantidade('');
+    setProdutoId('');
+  }
+
+  async function buscarProdutos() {
+    try {
+      const response = await axios.get(`${BASE_URL}/produtos`);
+      setProdutos(response.data);
+    } catch (error) {
+      mensagemErro('Erro ao carregar produtos.');
     }
   }
 
   async function salvar() {
-    let data = { id, nome, quantidade };
-    data = JSON.stringify(data);
+    const data = {
+      id,
+      quantidade,
+      produto: {
+        id: produtoId,
+      },
+    };
+
     if (idParam == null) {
       await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
+        .post(baseURL, data)
+        .then(() => {
+          mensagemSucesso('Estoque cadastrado com sucesso!');
+          navigate('/listagem-estoque');
         })
-        .then(function (response) {
-          mensagemSucesso(`Estoque ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-estoque`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+        .catch((error) => {
+          mensagemErro(error.response?.data || 'Erro ao cadastrar.');
         });
     } else {
       await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
+        .put(`${baseURL}/${idParam}`, data)
+        .then(() => {
+          mensagemSucesso('Estoque alterado com sucesso!');
+          navigate('/listagem-estoque');
         })
-        .then(function (response) {
-          mensagemSucesso(`Estoque ${nome} alterado com sucesso!`);
-          navigate(`/listagem-estoque`);
-        })
-        .catch(function (error) {
-          mensagemErro(error.response.data);
+        .catch((error) => {
+          mensagemErro(error.response?.data || 'Erro ao alterar.');
         });
     }
   }
 
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
-    });
-      setId(dados.id);
-      setNome(dados.nome);
-      setQuantidade(dados.quantidade);
+    try {
+      const response = await axios.get(`${baseURL}/${idParam}`);
+
+      const estoque = response.data;
+
+      setDados(estoque);
+      setId(estoque.id);
+      setQuantidade(estoque.quantidade);
+
+      if (estoque.produto) {
+        setProdutoId(estoque.produto.id);
+      }
+    } catch (error) {
+      mensagemErro('Erro ao carregar estoque.');
+    }
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
+    buscarProdutos();
 
-  if (!dados) return null;
+    if (idParam) {
+      buscar();
+    }
+  }, []);
 
   return (
     <div className='container'>
@@ -88,23 +106,31 @@ function CadastroEstoque() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='Nome: *' htmlFor='inputNome'>
-                <input
+
+              <FormGroup label='Produto: *' htmlFor='inputProduto'>
+                <select
                   type='text'
-                  id='inputNome'
-                  value={nome}
+                  id='inputProduto'
                   className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
-                />
+                  value={produtoId}
+                  onChange={(e) => setProdutoId(e.target.value)}
+                >
+                  <option value=''>Selecione um produto</option>
+
+                  {produtos.map((produto) => (
+                    <option key={produto.id} value={produto.id}>
+                      {produto.nome}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
+
               <FormGroup label='Quantidade: *' htmlFor='inputQuantidade'>
                 <input
-                  type='text'
+                  type='number'
                   id='inputQuantidade'
                   value={quantidade}
                   className='form-control'
-                  name='quantidade'
                   onChange={(e) => setQuantidade(e.target.value)}
                 />
               </FormGroup>
@@ -115,17 +141,13 @@ function CadastroEstoque() {
                   type='button'
                   className='btn btn-success'
                 >
-                  Cadastrar
+                  {idParam ? 'Alterar' : 'Cadastrar'}
                 </button>
 
                 <button
                   onClick={() => {
-                    if (!nome && !quantidade) {
-                      navigate(-1); 
-                    } else {
-                        navigate(-1);
-                        inicializar();
-                    }
+                    inicializar();
+                    navigate(-1);
                   }}
                   type='button'
                   className='btn btn-danger'
@@ -133,6 +155,7 @@ function CadastroEstoque() {
                   Cancelar
                 </button>
               </Stack>
+
             </div>
           </div>
         </div>

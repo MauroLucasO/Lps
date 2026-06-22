@@ -13,10 +13,9 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
-const baseURL = `${BASE_URL}-1/proprietarios`;
+const baseURL = `/proprietarios`;
 
 function ListagemProprietario() {
   const navigate = useNavigate();
@@ -35,7 +34,8 @@ function ListagemProprietario() {
     let data = JSON.stringify({ id });
     let url = `${baseURL}/${id}`;
     console.log(url);
-    await axios
+
+await api
       .delete(url, data, {
         headers: { 'Content-Type': 'application/json' },
       })
@@ -53,7 +53,7 @@ function ListagemProprietario() {
   }
 
   React.useEffect(() => {
-    axios.get(baseURL).then((response) => {
+    api.get(baseURL).then((response) => {
       setDados(response.data);
     });
   }, []);

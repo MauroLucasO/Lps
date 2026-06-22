@@ -48,8 +48,6 @@ function Relatorio() {
   const [idCliente, setIdCliente] = useState(0);
   const [clientes, setClientes] = useState([]);
   const [dadosPedidos, setDadosPedidos] = useState([]);
-  const [idItem, setIdItem] = useState(0);
-  const [idEstabelecimento, setIdEstabelecimento] = useState(0);
 
   useEffect(() => {
     axios.get(`${BASE_URL}/clientes`)
@@ -73,14 +71,14 @@ function Relatorio() {
               if (item.idItemPedido) {
                 try {
                   const itemRes = await axios.get(
-                    `${BASE_URL}-2/itemPedidos/${item.idItemPedido}`
+                    `${BASE_URL}/itemPedidos/${item.idItemPedido}`
                   );
                   itemDetails = itemRes.data;
 
                   if (itemDetails.idProduto) {
                     try {
                       const prodRes = await axios.get(
-                        `${BASE_URL}-2/produtos/${itemDetails.idProduto}`
+                        `${BASE_URL}/produtos/${itemDetails.idProduto}`
                       );
                       produtoNome = prodRes.data.nome || 'Sem Nome';
                       categoriaNome = prodRes.data.nomeCategoria || 'Sem Categoria';
@@ -118,23 +116,20 @@ function Relatorio() {
           setDadosPedidos([]);
         });
 
-      axios.get(`${BASE_URL}-2/pedido?idCliente=${idCliente}`)
-        .then((res) => setIdItem(res.data))
+      axios.get(`${BASE_URL}/pedido?idCliente=${idCliente}`)
+
         .catch((err) => console.log(err));
 
-      axios.get(`${BASE_URL}-2/pedido?idCliente=${idCliente}`)
-        .then((res) => setIdEstabelecimento(res.data))
+      axios.get(`${BASE_URL}/pedido?idCliente=${idCliente}`)
         .catch((err) => console.log(err));
     } else {
       setDadosPedidos([]);
-      setIdItem(0);
-      setIdEstabelecimento(0);
     }
   }, [idCliente]);
 
   useEffect(() => {
     if (idCliente !== 0) {
-      axios.get(`${BASE_URL}-3/relatorios`)
+      axios.get(`${BASE_URL}/relatorios`)
         .catch((err) => console.log(err));
     }
   }, [idCliente]);
