@@ -29,6 +29,7 @@ function CadastroCliente() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [senhaRepeticao, setSenhaRepeticao] = useState('');
+  const [login, setLogin] = useState('');
 
   const [dados, setDados] = useState([]);
 
@@ -43,6 +44,7 @@ function CadastroCliente() {
       setEstado ('');
       setLogradouro ('');
       setEmail ('');
+      setLogin('');
       setSenha('');
       setSenhaRepeticao('');
     } else {
@@ -54,14 +56,15 @@ function CadastroCliente() {
       setCidade (dados.cidade);
       setEstado (dados.estado);
       setLogradouro (dados.logradouro);
-      setEmail ('');
+      setEmail (dados.email);
+      setLogin(dados.login);
       setSenha('');
       setSenhaRepeticao('');
     }
   }
 
   async function salvar() {
-    let data = { id, nome, cpf, telefone, cep, cidade, estado, logradouro, email, senha, senhaRepeticao };
+    let data = { id, nome, cpf, telefone, cep, cidade, estado, logradouro, email, login, senha, senhaRepeticao };
     data = JSON.stringify(data);
     if (idParam == null) {
       await api
@@ -103,6 +106,7 @@ function CadastroCliente() {
       setEstado (dados.estado);
       setLogradouro (dados.logradouro);
       setEmail (dados.email);
+      setLogin(dados.login);
       setSenha('');
       setSenhaRepeticao('');
   }
@@ -202,6 +206,16 @@ function CadastroCliente() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </FormGroup>
+              <FormGroup label='Login: *' htmlFor='inputLogin'>
+                <input
+                  type='text'
+                  id='inputLogin'
+                  value={login}
+                  className='form-control'
+                  name='login'
+                  onChange={(e) => setLogin(e.target.value)}
+                />
+              </FormGroup>
               <FormGroup label='Senha: *' htmlFor='inputSenha'>
                 <input
                   type='password'
@@ -232,7 +246,7 @@ function CadastroCliente() {
                 </button>
                 <button
                   onClick={() => {
-                    if (!nome && !cpf && !senha && !senhaRepeticao && !cidade && !estado && !cep && !logradouro && !email && !telefone) {
+                    if (!nome && !cpf && !login && !senha && !senhaRepeticao && !cidade && !estado && !cep && !logradouro && !email && !telefone) {
                      navigate(-1);
                     } else {
                         navigate(-1);

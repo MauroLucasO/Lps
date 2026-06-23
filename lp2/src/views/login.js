@@ -21,12 +21,12 @@ class Login extends React.Component {
     try {
       const response = await api.post('/usuarios/auth', { login, senha });
       
-const token = response.data.token; 
+      const token = response.data.token; 
 
       if (token) {
         localStorage.setItem('meu_token', token);
         
-        mensagemSucesso(`Cliente ${login} logado com sucesso!`);
+        mensagemSucesso(`Administrador ${login} logado com sucesso!`);
 
         window.location.href = '/';
         
@@ -48,10 +48,17 @@ const token = response.data.token;
     });
   };
 
+  irParaCadastro = () => {
+    window.location.href = '/cadastro-admin'; 
+  };
+
   render() {
     return (
-      <div className='container'>
-        <div className='col-lg-4'>
+      <div 
+        className='container d-flex justify-content-center align-items-center' 
+        style={{ minHeight: '80vh' }}
+      >
+        <div className='col-lg-5 col-md-6 col-sm-8'>
           <Card title='Acesso'>
             <div className='row'>
               <div className='bs-component'>
@@ -75,7 +82,8 @@ const token = response.data.token;
                     onChange={(e) => this.setState({ senha: e.target.value })}
                   />
                 </FormGroup>
-                <Stack spacing={1} padding={1} direction='row'>
+                
+                <Stack spacing={1} padding={2} direction='row' justifyContent='center' flexWrap='wrap'>
                   <button
                     onClick={this.logar}
                     type='button'
@@ -89,6 +97,13 @@ const token = response.data.token;
                     className='btn btn-danger'
                   >
                     Cancelar
+                  </button>
+                  <button
+                    onClick={this.irParaCadastro}
+                    type='button'
+                    className='btn btn-info'
+                  >
+                    Cadastrar
                   </button>
                 </Stack>
               </div>

@@ -63,28 +63,21 @@ function ListagemGerente() {
   }, []);
 
 const obterNomeEstabelecimento = (dadoGerente) => {
-  // Cenário A: O back-end já devolve o objeto do estabelecimento populado
   if (dadoGerente.estabelecimento && typeof dadoGerente.estabelecimento === 'object') {
     return dadoGerente.estabelecimento.nome || dadoGerente.estabelecimento.estabelecimento || '';
   }
   
-  // Cenário B: Se a API trouxer como string direta
   if (dadoGerente.estabelecimento && typeof dadoGerente.estabelecimento === 'string') {
     return dadoGerente.estabelecimento;
   }
 
-  // Nome do estabelecimento na listagem/cadastro de gerentes/cupons
-  // Substituir o email pelo login
-  // Colocar a seleção de proprietário no cadastro de estabelecimentos (ou somente arrumar no cadastro do proprietario)
-  // Mapeie aqui todas as variações possíveis de nome que o seu Back-end pode estar enviando:
   const idEst = 
     dadoGerente.estabelecimento_id || 
     dadoGerente.id_estabelecimento || 
-    dadoGerente.idEstabelecimento ||   // Comum em Java / Node (CamelCase)
-    dadoGerente.estabelecimentoId;     // Comum em C# / Prisma ORM
+    dadoGerente.idEstabelecimento ||
+    dadoGerente.estabelecimentoId;
 
   if (idEst && dadosEstabelecimento.length > 0) {
-    // Garantimos a comparação convertendo ambos para String para evitar problemas de tipo (Ex: "1" === 1)
     const encontrado = dadosEstabelecimento.find((est) => String(est.id) === String(idEst));
     return encontrado ? (encontrado.nome || encontrado.estabelecimento) : 'Não localizado';
   }

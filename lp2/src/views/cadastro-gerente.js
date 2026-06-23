@@ -12,15 +12,14 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
 function CadastroGerente() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}/gerentes`;
-  const estabelecimentosURL = `${BASE_URL}/estabelecimentos`;
+  const baseURL = `/gerentes`;
+  const estabelecimentosURL = `/estabelecimentos`;
 
   const [id, setId] = useState('');
   const [estabelecimento_id, setEstabelecimento] = useState('');
@@ -82,7 +81,7 @@ function CadastroGerente() {
     data = JSON.stringify(data);
 
     if (idParam == null) {
-      await axios
+      await api
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
@@ -94,7 +93,7 @@ function CadastroGerente() {
           mensagemErro(error.response.data);
         });
     } else {
-      await axios
+      await api
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
@@ -109,7 +108,7 @@ function CadastroGerente() {
   }
 
 async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+    await api.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
       setId(dados.id);
@@ -131,7 +130,7 @@ async function buscar() {
 
   useEffect(() => {
 
-    axios.get(estabelecimentosURL)
+    api.get(estabelecimentosURL)
       .then((response) => {
         setListaEstabelecimentos(response.data);
       })

@@ -19,6 +19,7 @@ import CadastroCategoria from './views/cadastro-categoria';
 import CadastroItemPedido from './views/cadastro-itemPedido';
 import CadastroEstoque from './views/cadastro-estoque';
 import CadastroProduto from './views/cadastro-produto';
+import CadastroAdmin from './views/cadastro-admin';
 
 import Relatorio from './views/relatorio';
 
@@ -118,6 +119,16 @@ function Rotas(props) {
         <Route
           path='/relatorio/'
           element={<Relatorio />}
+        />
+
+        <Route
+          path="/cadastro-admin" 
+          element={<CadastroAdmin />} 
+        />
+
+        <Route 
+          path="/cadastro-admin/:idParam" 
+          element={<CadastroAdmin />} 
         />
       </Routes>
     </BrowserRouter>

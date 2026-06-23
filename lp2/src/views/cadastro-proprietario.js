@@ -12,15 +12,14 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
 function CadastroProprietario() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}/propretarios`;
-  const estabelecimentosURL = `${BASE_URL}/estabelecimentos`;
+  const baseURL = `/proprietarios`;
+  const estabelecimentosURL = `/estabelecimentos`;
 
   const [id, setId] = useState('');
   const [estabelecimento_id, setEstabelecimento] = useState('');
@@ -82,25 +81,25 @@ function CadastroProprietario() {
     data = JSON.stringify(data);
 
     if (idParam == null) {
-      await axios
+      await api
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
           mensagemSucesso(`Proprietario ${nome} cadastrado com sucesso!`);
-          navigate(`/listagem-propretarios`);
+          navigate(`/listagem-proprietario`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
         });
     } else {
-      await axios
+      await api
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
           mensagemSucesso(`Proprietario ${nome} alterado com sucesso!`);
-          navigate(`/listagem-propretarios`);
+          navigate(`/listagem-proprietario`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -109,7 +108,7 @@ function CadastroProprietario() {
   }
 
 async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+    await api.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
       setId(dados.id);
@@ -124,7 +123,6 @@ async function buscar() {
       setSenha('');
       setSenhaRepeticao('');
 
-      // CORREÇÃO AQUI: Lê a propriedade "estabelecimento" que veio do inspecionar
       if (dados.estabelecimento) {
         setEstabelecimentoSelecionado(dados.estabelecimento);
       }
@@ -132,7 +130,7 @@ async function buscar() {
 
   useEffect(() => {
 
-    axios.get(estabelecimentosURL)
+    api.get(estabelecimentosURL)
       .then((response) => {
         setListaEstabelecimentos(response.data);
       })

@@ -9,14 +9,13 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
 function CadastroProduto() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}/produtos`;
+  const baseURL = `/produtos`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
@@ -47,7 +46,7 @@ function CadastroProduto() {
     data = JSON.stringify(data);
 
     if (idParam == null) {
-      await axios
+      await api
         .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
@@ -59,7 +58,7 @@ function CadastroProduto() {
           mensagemErro(error.response.data);
         });
     } else {
-      await axios
+      await api
         .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
@@ -74,7 +73,7 @@ function CadastroProduto() {
   }
 
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+    await api.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
     setId(dados.id);
@@ -87,7 +86,7 @@ function CadastroProduto() {
   const [dadosCategoria, setDadosCategoria] = React.useState(null);
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/categorias`).then((response) => {
+    api.get(`/categorias`).then((response) => {
       setDadosCategoria(response.data);
     });
   }, []);
@@ -147,7 +146,7 @@ function CadastroProduto() {
                   onChange={(e) => setIdCategoria(e.target.value)}
                 >
                   <option key='0' value='0'>
-                  <option value=''>Selecione um produto</option>
+                    <option value=''>Selecione uma categoria</option>
                   </option>
                   {dadosCategoria.map((dado) => (
                     <option key={dado.id} value={dado.id}>

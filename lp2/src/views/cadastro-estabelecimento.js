@@ -11,14 +11,13 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
 function CadastroEstabelecimento() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}/estabelecimentos`;
+  const baseURL = `/estabelecimentos`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
@@ -32,7 +31,7 @@ function CadastroEstabelecimento() {
     if (idParam) {
       async function buscar() {
         try {
-          const response = await axios.get(`${baseURL}/${idParam}`);
+          const response = await api.get(`${baseURL}/${idParam}`);
           const d = response.data;
 
           setId(d.id);
@@ -65,10 +64,10 @@ function CadastroEstabelecimento() {
 
     try {
       if (!idParam) {
-        await axios.post(baseURL, data);
+        await api.post(baseURL, data);
         mensagemSucesso(`Estabelecimento ${nome} cadastrado com sucesso!`);
       } else {
-        await axios.put(`${baseURL}/${idParam}`, data);
+        await api.put(`${baseURL}/${idParam}`, data);
         mensagemSucesso(`Estabelecimento ${nome} alterado com sucesso!`);
       }
 

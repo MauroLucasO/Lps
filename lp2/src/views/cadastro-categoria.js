@@ -9,14 +9,13 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 
 import '../custom.css';
 
-import axios from 'axios';
-import { BASE_URL } from '../config/axios';
+import api from '../config/axios';
 
 function CadastroCategoria() {
   const { idParam } = useParams();
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}/categorias`;
+  const baseURL = `/categorias`;
 
   const [id, setId] = useState('');
   const [nome, setNome] = useState('');
@@ -26,7 +25,7 @@ function CadastroCategoria() {
   const [dadosNome, setDadosNome] = useState([]);
 
   useEffect(() => {
-    axios.get(baseURL)
+    api.get(baseURL)
       .then((response) => setDadosNome(response.data))
       .catch((error) => mensagemErro('Erro ao carregar categorias.'));
   }, [baseURL]);
@@ -47,10 +46,10 @@ function CadastroCategoria() {
 
     try {
       if (!idParam) {
-        await axios.post(baseURL, data, { headers: { 'Content-Type': 'application/json' } });
+        await api.post(baseURL, data, { headers: { 'Content-Type': 'application/json' } });
         mensagemSucesso(`Categoria ${nome} cadastrada com sucesso!`);
       } else {
-        await axios.put(`${baseURL}/${idParam}`, data, { headers: { 'Content-Type': 'application/json' } });
+        await api.put(`${baseURL}/${idParam}`, data, { headers: { 'Content-Type': 'application/json' } });
         mensagemSucesso(`Categoria ${nome} alterada com sucesso!`);
       }
       navigate('/listagem-categoria');
@@ -63,7 +62,7 @@ function CadastroCategoria() {
     async function buscar() {
       if (idParam) {
         try {
-          const response = await axios.get(`${baseURL}/${idParam}`);
+          const response = await api.get(`${baseURL}/${idParam}`);
           const d = response.data;
           setDados(d);
           setId(d.id);
